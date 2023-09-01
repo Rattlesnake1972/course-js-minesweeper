@@ -4,10 +4,11 @@ const c = canvas.getContext("2d");
 
 const size = 50;
 const columns = canvas.width / size;
+const rows = canvas.height / size;
 
-for (let valami = 0; valami < columns; valami++) {
+for (let j = 0; j < rows; j++) {
     for (let i = 0; i < columns; i++) {
-        drawImage(i * size, valami * size);
+        drawImage(i * size, j * size);
     }
 }
 
