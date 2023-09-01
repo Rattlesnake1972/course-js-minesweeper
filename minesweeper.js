@@ -6,9 +6,13 @@ const size = 50;
 const columns = canvas.width / size;
 const rows = canvas.height / size;
 
-for (let j = 0; j < rows; j++) {
+drawMap();
+
+function drawMap() {
     for (let i = 0; i < columns; i++) {
-        drawImage(i * size, j * size);
+        for (let j = 0; j < rows; j++) {
+            drawImage(i * size, j * size);
+        }
     }
 }
 
