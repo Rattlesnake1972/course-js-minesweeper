@@ -10,5 +10,4 @@ drawImage(123, 234);
 
 function drawImage(x, y) {
     c.drawImage(image, x, y, size, size);          
-    c.drawImage(image, x + size, y + size, size, size);
 }
