@@ -16,9 +16,9 @@ console.log(second);                                // kiírjuk a second változ
 drawMap();                                          // meghívjuk a drawMap függvényt
 
 function drawMap() {                               // drawMap függvény
-    for (let i = 0; i < columns; i++) {            // for ciklus, amely a columns változó értékéig megy
-        for (let j = 0; j < rows; j++) {           // for ciklus, amely a rows változó értékéig megy
-            drawImage(i * size, j * size);         // meghívjuk a drawImage függvényt
+    for (let i = 0; i < columns; i++) {            // for ciklus, amely a columns változó értékéig megy, amely nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete
+        for (let j = 0; j < rows; j++) {           // for ciklus, amely a rows változó értékéig megy, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete
+            drawImage(i * size, j * size);         // meghívjuk a drawImage függvényt, amelynek átadjuk az i és j változó értékét, amelyek a for ciklusok változói, és a size változót, ami a hidden kép mérete
         }
     }
 }
