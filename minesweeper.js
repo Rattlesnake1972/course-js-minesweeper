@@ -1,21 +1,28 @@
-const image = document.getElementById("hidden");
-const canvas = document.getElementById("myCanvas");
-const c = canvas.getContext("2d");
+const image = document.getElementById("hidden");        // a hidden id-jű képet eltároljuk az image változóban
+const canvas = document.getElementById("myCanvas");     // a myCanvas id-jű canvas elemet eltároljuk a canvas változóban
+const c = canvas.getContext("2d");                      // a canvas változó contextjét eltároljuk a c változóban
 
-const size = 50;
-const columns = canvas.width / size;
-const rows = canvas.height / size;
+const size = 50;                                        // a size változóba eltároljuk a 50 értéket
+const columns = canvas.width / size;                    // a columns változóba eltároljuk a canvas szélességét osztva a size változóval
+const rows = canvas.height / size;                      // a rows változóba eltároljuk a canvas magasságát osztva a size változóval
 
-drawMap();
+let firstRaw = [9 , 8 , 0 , 1 , 1 , 1 , 0 , 0];     // firstRaw tömb 8 elemmel
+let first = firstRaw[0];                            // kiolvassuk firstRaw első elemét és eltároljuk a first változóban  
+let second = firstRaw[1];                           // kiolvassuk firstRaw második elemét és eltároljuk a second változóban
+console.log(first);                                 // kiírjuk a first változót
+console.log(second);                                // kiírjuk a second változót
 
-function drawMap() {
-    for (let i = 0; i < columns; i++) {
-        for (let j = 0; j < rows; j++) {
-            drawImage(i * size, j * size);
+
+drawMap();                                          // meghívjuk a drawMap függvényt
+
+function drawMap() {                               // drawMap függvény
+    for (let i = 0; i < columns; i++) {            // for ciklus, amely a columns változó értékéig megy
+        for (let j = 0; j < rows; j++) {           // for ciklus, amely a rows változó értékéig megy
+            drawImage(i * size, j * size);         // meghívjuk a drawImage függvényt
         }
     }
 }
 
-function drawImage(x, y) {
-    c.drawImage(image, x, y, size, size);          
+function drawImage(x, y) {                         // drawImage függvény
+    c.drawImage(image, x, y, size, size);          // kirajzoljuk a képet a megadott paraméterekkel
 }
