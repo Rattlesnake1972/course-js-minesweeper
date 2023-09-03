@@ -23,6 +23,6 @@ function drawMap() {                               // drawMap függvény
     }
 }
 
-function drawImage(x, y) {                         // drawImage függvény
-    c.drawImage(image, x, y, size, size);          // kirajzoljuk a képet a megadott paraméterekkel
+function drawImage(x, y) {                         // drawImage függvény, amelynek átadjuk az x és y változó értékét
+    c.drawImage(image, x, y, size, size);          // kirajzoljuk a képet a megadott paraméterekkel, amelyek az x és y változók, amelyek a for ciklusok változói, és a size változó, ami a hidden kép mérete
 }
