@@ -7,12 +7,17 @@ const columns = canvas.width / size;                    // a columns változóba
 const rows = canvas.height / size;                      // a rows változóba eltároljuk a canvas magasságát osztva a size változóval
 
 let firstRaw = [9 , 8 , 0 , 1 , 1 , 1 , 0 , 0];     // firstRaw tömb 8 elemmel
+secondRaw = [0, 0, 1, 2, 3]                         // secondRaw tömb 5 elemmel
 firstRaw[1] = 18;                                   // firstRaw tömb első elemének értékét megváltoztatjuk 18-ra
 let first = firstRaw[0];                            // kiolvassuk firstRaw első elemét és eltároljuk a first változóban  
 let second = firstRaw[1];                           // kiolvassuk firstRaw második elemét és eltároljuk a second változóban
 console.log(first);                                 // kiírjuk a first változót a konzolra, ami 9
 console.log(second);                                // kiírjuk a second változót a konzolra, ami most már 18
 console.log(firstRaw.length);                       // kiírjuk a firstRaw tömb hosszát a konzolra
+
+let map = [firstRaw, secondRaw]                     // map tömb, amelynek elemei a firstRaw és secondRaw tömbök, kétdimenziós tömb
+
+console.log(map);                                   // kiírjuk a map tömböt a konzolra
 
 
 drawMap();                                          // meghívjuk a drawMap függvényt
