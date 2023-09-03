@@ -9,8 +9,8 @@ const rows = canvas.height / size;                      // a rows változóba el
 let firstRaw = [9 , 8 , 0 , 1 , 1 , 1 , 0 , 0];     // firstRaw tömb 8 elemmel
 let first = firstRaw[0];                            // kiolvassuk firstRaw első elemét és eltároljuk a first változóban  
 let second = firstRaw[1];                           // kiolvassuk firstRaw második elemét és eltároljuk a second változóban
-console.log(first);                                 // kiírjuk a first változót
-console.log(second);                                // kiírjuk a second változót
+console.log(first);                                 // kiírjuk a first változót a konzolra
+console.log(second);                                // kiírjuk a second változót a konzolra
 
 
 drawMap();                                          // meghívjuk a drawMap függvényt
