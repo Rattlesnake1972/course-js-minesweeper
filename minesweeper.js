@@ -5,17 +5,14 @@ const c = canvas.getContext("2d");                      // a canvas változó co
 const size = 50;                                        // a size változóba eltároljuk a 50 értéket
 const columns = canvas.width / size;                    // a columns változóba eltároljuk a canvas szélességét osztva a size változóval
 const rows = canvas.height / size;                      // a rows változóba eltároljuk a canvas magasságát osztva a size változóval
+const mine = 'mine';                                    // a mine változóba eltároljuk a mine stringet
 
 let map = [
-    [9, 8, 0, 1, 1, 1, 0, 0],
-    [0, 0, 1, 2, 3, 0, 0, 0]                            // a map tömbbe eltároljuk a pálya elemeit
+    [9, 8, mine, 1, mine, 1, 0, 0],
+    [0, 0, 1, 2, mine, 0, 0, 0]                            // a map tömbbe eltároljuk a pálya adatait. A mine változó értéke a tömbben a mine string, amelyet a drawMap függvényben használunk fel. 
 ];
 
-let isMine = false;                                     // a isMine változóba eltároljuk a false értéket, amely azt jelenti, hogy nem aknát találtunk, ezért nem robban fel a játék. Ha true értéket kap, akkor robban az akna és vége a játéknak. A játék akkor ér véget, ha robban az akna, vagy ha minden nem aknás mezőt felfedtünk. A játék akkor nyerhető meg, ha minden aknát jelölünk zászlóval. Ez egy boolean változó, amelynek két értéke lehet: true vagy false. A true azt jelenti, hogy igaz, a false azt jelenti, hogy hamis. A boolean változók használatakor nem kell idézőjelet használni, mert nem string típusú változók. A string típusú változók idézőjelek között vannak, a szám típusú változók nem. A boolean változók nem. 
 
-let text = "";                                          // a text változóba eltároljuk a "" értéket, amely egy üres string, amelyet a játék során fogunk használni. Az idézőjelek lehetnek duplák vagy szimplák, a lényeg, hogy páros számú legyen, mert ha páratlan számú, akkor hibát fog dobni a böngésző.
-
-let valami = undefined;                                 // az undefined érték azt jelenti, hogy nem definiált, vagyis nem adtunk meg értéket a változónak. 
 
 console.log(map);                                   // kiírjuk a map tömböt a konzolra
 
