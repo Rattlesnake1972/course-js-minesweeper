@@ -7,24 +7,24 @@ const columns = canvas.width / size;                    // a columns változóba
 const rows = canvas.height / size;                      // a rows változóba eltároljuk a canvas magasságát osztva a size változóval
 const mine = 'mine';                                    // a mine változóba eltároljuk a mine stringet
 
-let map = [
-    [9, 8, mine, 1, mine, 1, 0, 0],
-    [0, 0, 1, 2, mine, 0, 0, 0]                         // a map tömbbe eltároljuk a pálya adatait. A mine változó értéke a tömbben a mine string, amelyet a drawMap függvényben használunk fel. 
-];
-
-let row = [];                                           // a row tömböt létrehozzuk, amelyet a map tömbbe fogunk pusholni. A push metódus a tömb végére fűzi hozzá az elemet.
-for (let i = 0; i < columns; i++) {                     // for ciklus, amely a columns változó értékéig megy, amely nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete.
-        row[i] = 0;                                     // a row tömb i-edik, valahányadik elemébe 0-t rakunk. Ezt azt eredményezi, hogy a row tömbbe annyi 0 kerül, ahány oszlop van a pályán. Jelen 
-}                                                       // esetben 16.
-
-                                                        
+let map = createMap();                                  // a map változóba eltároljuk a createMap függvény visszatérési értékét, ami a map tömböt adja vissza
+                             
+console.log(map);                                        // kiírjuk a map tömböt a konzolra
 
 
+drawMap();                                               // meghívjuk a drawMap függvényt
 
-console.log(row);                                   // kiírjuk a row tömböt a konzolra
-
-
-drawMap();                                          // meghívjuk a drawMap függvényt
+function createMap() {                                      // createMap függvény
+    let map = [];                                           // a map tömböt létrehozzuk
+    for (let j = 0; j < rows; j++) {                        // for ciklus, amely a rows változó értékéig megy, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete
+        let row = [];                                           // a row tömböt létrehozzuk, amelyet a map tömbbe fogunk pusholni. A push metódus a tömb végére fűzi hozzá az elemet.
+        for (let i = 0; i < columns; i++) {                     // for ciklus, amely a columns változó értékéig megy, amely nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete.
+            row[i] = 0;                                         // a row tömb i-edik, valahányadik elemébe 0-t rakunk. Ezt azt eredményezi, hogy a row tömbbe annyi 0 kerül, ahány oszlop van a pályán. Jelen 
+        }                                                       // esetben 16, 12 sorban.
+        map[j] = row;                                          // a map tömbbe pusholjuk a row tömböt, amelynek az értékei 0-k. A map tömbbe annyi row tömb kerül, ahány sor van a pályán                                             
+    }
+    return map;                                                 // visszatérünk a map tömbbel
+}
 
 function drawMap() {                               // drawMap függvény
     for (let i = 0; i < columns; i++) {            // for ciklus, amely a columns változó értékéig megy, amely nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete
