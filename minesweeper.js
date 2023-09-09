@@ -3,18 +3,25 @@ const canvas = document.getElementById("myCanvas");     // a myCanvas id-jű can
 const c = canvas.getContext("2d");                      // a canvas változó contextjét eltároljuk a c változóban
 
 const size = 50;                                        // a size változóba eltároljuk a 50 értéket
-const columns = canvas.width / size;                    // a columns változóba eltároljuk a canvas szélességét osztva a size változóval
+const columns = canvas.width / size;                    // a columns változóba eltároljuk a canvas szélességét osztva a size változóval. A canvas a képernyőn megjelenő terület, amelyen rajzolunk. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
 const rows = canvas.height / size;                      // a rows változóba eltároljuk a canvas magasságát osztva a size változóval
 const mine = 'mine';                                    // a mine változóba eltároljuk a mine stringet
 
 let map = [
     [9, 8, mine, 1, mine, 1, 0, 0],
-    [0, 0, 1, 2, mine, 0, 0, 0]                            // a map tömbbe eltároljuk a pálya adatait. A mine változó értéke a tömbben a mine string, amelyet a drawMap függvényben használunk fel. 
+    [0, 0, 1, 2, mine, 0, 0, 0]                         // a map tömbbe eltároljuk a pálya adatait. A mine változó értéke a tömbben a mine string, amelyet a drawMap függvényben használunk fel. 
 ];
 
+let row = [];                                           // a row tömböt létrehozzuk, amelyet a map tömbbe fogunk pusholni. A push metódus a tömb végére fűzi hozzá az elemet.
+for (let i = 0; i < columns; i++) {                     // for ciklus, amely a columns változó értékéig megy, amely nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete.
+        row[i] = 0;                                     // a row tömb i-edik, valahányadik elemébe 0-t rakunk. Ezt azt eredményezi, hogy a row tömbbe annyi 0 kerül, ahány oszlop van a pályán. Jelen 
+}                                                       // esetben 16.
+
+                                                        
 
 
-console.log(map);                                   // kiírjuk a map tömböt a konzolra
+
+console.log(row);                                   // kiírjuk a row tömböt a konzolra
 
 
 drawMap();                                          // meghívjuk a drawMap függvényt
