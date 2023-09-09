@@ -8,8 +8,14 @@ const rows = canvas.height / size;                      // a rows változóba el
 
 let map = [
     [9, 8, 0, 1, 1, 1, 0, 0],
-    [0, 0, 1, 2, 3]                                     // a map tömbbe eltároljuk a pálya elemeit
-];                                                      
+    [0, 0, 1, 2, 3, 0, 0, 0]                            // a map tömbbe eltároljuk a pálya elemeit
+];
+
+let isMine = false;                                     // a isMine változóba eltároljuk a false értéket, amely azt jelenti, hogy nem aknát találtunk, ezért nem robban fel a játék. Ha true értéket kap, akkor robban az akna és vége a játéknak. A játék akkor ér véget, ha robban az akna, vagy ha minden nem aknás mezőt felfedtünk. A játék akkor nyerhető meg, ha minden aknát jelölünk zászlóval. Ez egy boolean változó, amelynek két értéke lehet: true vagy false. A true azt jelenti, hogy igaz, a false azt jelenti, hogy hamis. A boolean változók használatakor nem kell idézőjelet használni, mert nem string típusú változók. A string típusú változók idézőjelek között vannak, a szám típusú változók nem. A boolean változók nem. 
+
+let text = "";                                          // a text változóba eltároljuk a "" értéket, amely egy üres string, amelyet a játék során fogunk használni. Az idézőjelek lehetnek duplák vagy szimplák, a lényeg, hogy páros számú legyen, mert ha páratlan számú, akkor hibát fog dobni a böngésző.
+
+let valami = undefined;                                 // az undefined érték azt jelenti, hogy nem definiált, vagyis nem adtunk meg értéket a változónak. 
 
 console.log(map);                                   // kiírjuk a map tömböt a konzolra
 
