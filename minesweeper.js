@@ -8,6 +8,8 @@ const rows = canvas.height / size;                      // a rows változóba el
 const mine = 'mine';                                    // a mine változóba eltároljuk a mine stringet
 
 let map = createMap();                                  // a map változóba eltároljuk a createMap függvény visszatérési értékét, ami a map tömböt adja vissza
+map[0][0] = mine;                                       // a map tömb 0. elemének 0. elemébe a mine stringet rakjuk
+map[5][6] = mine;                                       // a map tömb 5. elemének 6. elemébe a mine stringet rakjuk
                              
 console.log(map);                                        // kiírjuk a map tömböt a konzolra
 
