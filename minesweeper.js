@@ -20,8 +20,8 @@ function placeMines(map, mineCount) {                    // placeMines függvén
     while (mines < mineCount) {                          // while ciklus, amely addig fut, amíg a mines változó értéke kisebb, mint a mineCount változó értéke
         let x = Math.floor(Math.random() * columns);     // a x változóba eltároljuk a Math.floor(Math.random() * columns) értékét, ami a Math.floor metódus a Math objektum egy metódusa, amely lefelé kerekíti a megadott számot, a Math.random metódus pedig a Math objektum egy metódusa, amely egy 0 és 1 közötti véletlen számot ad vissza, a columns változó pedig a canvas szélessége osztva a size változóval, ami a hidden kép mérete
         let y = Math.floor(Math.random() * rows);        // a y változóba eltároljuk a Math.floor(Math.random() * rows) értékét, ami a Math.floor metódus a Math objektum egy metódusa, amely lefelé kerekíti a megadott számot, a Math.random metódus pedig a Math objektum egy metódusa, amely egy 0 és 1 közötti véletlen számot ad vissza, a rows változó pedig a canvas magassága osztva a size változóval, ami a hidden kép mérete
-        if (map[y][x] !== mine) {                        // if feltétel, amely akkor fut le, ha a map tömb y-edik, valahányadik elemének x-edik, valahányadik elemének értéke nem egyenlő a mine változó értékével
-            map[y][x] = mine;                            // a map tömb y-edik, valahányadik elemének x-edik, valahányadik elemébe beírjuk a mine változó értékét
+        if (map[y][x] !== mine) {                        // if feltétel, amely akkor fut le, ha a map tömb y-edik, és x-edik tömbjének valahányadik elemének értéke nem egyenlő a mine változó értékével
+            map[y][x] = mine;                            // a map tömb y-edik és x-edik tömbjének valahányadik elemébe beírjuk a mine változó értékét
             mines++;                                     // a mines változó értékét növeljük eggyel
         }
     }
