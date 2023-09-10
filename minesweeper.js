@@ -15,14 +15,14 @@ console.log(map);                                        // kiírjuk a map tömb
 
 drawMap();                                               // meghívjuk a drawMap függvényt
 
-function placeMines(map, mineCount) {
-   let mines = 0;
-    while (mines < mineCount) {
-        let x = Math.floor(Math.random() * columns);
-        let y = Math.floor(Math.random() * rows);
-        if (map[y][x] !== mine) {
-            map[y][x] = mine;
-            mines++;
+function placeMines(map, mineCount) {                    // placeMines függvény, amelynek átadjuk a map és mineCount változó értékét
+   let mines = 0;                                        // a mines változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány akna van a pályán
+    while (mines < mineCount) {                          // while ciklus, amely addig fut, amíg a mines változó értéke kisebb, mint a mineCount változó értéke
+        let x = Math.floor(Math.random() * columns);     // a x változóba eltároljuk a Math.floor(Math.random() * columns) értékét, ami a Math.floor metódus a Math objektum egy metódusa, amely lefelé kerekíti a megadott számot, a Math.random metódus pedig a Math objektum egy metódusa, amely egy 0 és 1 közötti véletlen számot ad vissza, a columns változó pedig a canvas szélessége osztva a size változóval, ami a hidden kép mérete
+        let y = Math.floor(Math.random() * rows);        // a y változóba eltároljuk a Math.floor(Math.random() * rows) értékét, ami a Math.floor metódus a Math objektum egy metódusa, amely lefelé kerekíti a megadott számot, a Math.random metódus pedig a Math objektum egy metódusa, amely egy 0 és 1 közötti véletlen számot ad vissza, a rows változó pedig a canvas magassága osztva a size változóval, ami a hidden kép mérete
+        if (map[y][x] !== mine) {                        // if feltétel, amely akkor fut le, ha a map tömb y-edik, valahányadik elemének x-edik, valahányadik elemének értéke nem egyenlő a mine változó értékével
+            map[y][x] = mine;                            // a map tömb y-edik, valahányadik elemének x-edik, valahányadik elemébe beírjuk a mine változó értékét
+            mines++;                                     // a mines változó értékét növeljük eggyel
         }
     }
 }
