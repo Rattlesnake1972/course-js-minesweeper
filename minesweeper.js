@@ -6,17 +6,27 @@ const size = 50;                                        // a size változóba el
 const columns = canvas.width / size;                    // a columns változóba eltároljuk a canvas szélességét osztva a size változóval. A canvas a képernyőn megjelenő terület, amelyen rajzolunk. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
 const rows = canvas.height / size;                      // a rows változóba eltároljuk a canvas magasságát osztva a size változóval
 const mine = 'mine';                                    // a mine változóba eltároljuk a mine stringet
-const mineCount = 5;                                    // a mineCount változóba eltároljuk az 5 értéket, azaz 5 db akna lesz a pályán
+const mineCount = 25;                                    // a mineCount változóba eltároljuk az 25 értéket, azaz 25 db akna lesz a pályán
 
 let map = createMap();                                  // a map változóba eltároljuk a createMap függvény visszatérési értékét, ami a map tömböt adja vissza
-let randomRow = Math.floor(Math.random() * rows);       // a randomRow változóba eltároljuk a Math.floor(Math.random() * rows) értékét, ami egy véletlenszerű számot ad vissza, amelynek a maximuma a rows változó értéke, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete. A Math.floor metódus lefelé kerekíti a számot. A Math.random metódus 0 és 1 közötti véletlenszerű számot ad vissza.
-let randomColumn = Math.floor(Math.random() * columns); // a randomColumn változóba eltároljuk a Math.floor(Math.random() * columns) értékét, ami egy véletlenszerű számot ad vissza, amelynek a maximuma a columns változó értéke, ami nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete. A Math.floor metódus lefelé kerekíti a számot. A Math.random metódus 0 és 1 közötti véletlenszerű számot ad vissza.                                       
-map[randomRow][randomColumn] = mine;   
-                             
+placeMines(map, mineCount);                             // meghívjuk a placeMines függvényt, amelynek átadjuk a map és mineCount változó értékét
+         
 console.log(map);                                        // kiírjuk a map tömböt a konzolra
 
-
 drawMap();                                               // meghívjuk a drawMap függvényt
+
+function placeMines(map, mineCount) {
+   let mines = 0;
+    while (mines < mineCount) {
+        let x = Math.floor(Math.random() * columns);
+        let y = Math.floor(Math.random() * rows);
+        if (map[y][x] !== mine) {
+            map[y][x] = mine;
+            mines++;
+        }
+    }
+}
+
 
 function createMap() {                                      // createMap függvény
     let map = [];                                           // a map tömböt létrehozzuk
