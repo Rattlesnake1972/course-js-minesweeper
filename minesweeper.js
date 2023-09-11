@@ -26,7 +26,7 @@ placeMines(map, mineCount);                             // meghívjuk a placeMin
          
 console.log(map);                                        // kiírjuk a map tömböt a konzolra
 
-whenAllImagesLoaded(drawMap);                                               // meghívjuk a drawMap függvényt és képeket jelenít meg a canvason
+whenAllImagesLoaded(drawMap);                            // Amikor az összes kép betöltődött, meghívjuk a drawMap függvényt, hogy a képek frissítéskor mindig megjelenjenek a canvason
 
 function placeMines(map, mineCount) {                    // placeMines függvény, amelynek átadjuk a map és mineCount változó értékét
    let mines = 0;                                        // a mines változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány akna van a pályán
