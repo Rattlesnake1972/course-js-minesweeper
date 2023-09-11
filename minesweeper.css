@@ -1,0 +1,61 @@
+* {                                                               
+    box-sizing: border-box;                                       /*A box-sizing: border-box azt jelenti, hogy a padding és a border nem növeli a box méretét, csak a tartalom.*/                                      
+    user-select: none;                                            /*A user-select: none; azt jelenti, hogy a felhasználó nem tudja kijelölni a szöveget.*/
+  }
+  
+  html, body {
+    height: 100%;                                                 /*A height: 100%; azt jelenti, hogy a body és a html 100%-os magasságú.*/
+    margin: 0;                                                    /*A margin: 0; azt jelenti, hogy a body és a html nem rendelkezik margóval.*/
+    display: flex;                                                /*A display: flex; azt jelenti, hogy a body és a html flexboxként működik. A flexbox nem más, mint egy rugalmas elrendezési modell, amely lehetővé teszi, hogy az elemeket egymáshoz képest rugalmasan rendezzük el.*/
+    flex-direction: column;                                       /*A flex-direction: column; azt jelenti, hogy a body és a html flexboxként működik, és a benne lévő elemeket oszlopokba rendezzük.*/
+    align-items: center;                                          /*A align-items: center; azt jelenti, hogy a body és a html flexboxként működik, és a benne lévő elemeket a középre igazítjuk.*/
+    justify-content: center;                                      /*A justify-content: center; azt jelenti, hogy a body és a html flexboxként működik, és a benne lévő elemeket a középre igazítjuk.*/
+    font-family: 'Caveat', sans-serif;                            /*A font-family: 'Caveat', sans-serif; azt jelenti, hogy a body és a html betűtípusa a Caveat, vagy ha az nem elérhető, akkor a sans-serif.*/
+  }
+  
+  body {
+    background-image: url("assets/wooden_background.png");        /*A body háttérképe a wooden_background.png.*/   
+    background-size: contain;                                     /*A background-size: contain; azt jelenti, hogy a háttérkép mérete a lehető legnagyobb, de úgy, hogy az egész látszódjon.*/
+    background-repeat: repeat;                                    /*A background-repeat: repeat; azt jelenti, hogy a háttérkép ismétlődik.*/
+    background-position-y: 18vh;                                  /*A background-position-y: 18vh; azt jelenti, hogy a háttérkép függőleges pozíciója 18vh. A 18vh azt jelenti, hogy a képernyő 18%-ánál kezdődik a háttérkép.*/
+  }
+  
+  #control-panel {
+    display: flex;                                                /*A display: flex; azt jelenti, hogy a control-panel flexboxként működik.*/
+    align-items: center;    
+    justify-content: space-between;                               /*A justify-content: space-between; azt jelenti, hogy a control-panel flexboxként működik, és a benne lévő elemeket a középre igazítjuk, de a közöttük lévő távolság a lehető legnagyobb.*/ 
+    margin: 2vh 0;
+  }
+  
+  .button {
+    cursor: pointer;                                               /*A cursor: pointer; azt jelenti, hogy a gomb fölé érve az egér mutatójának formája egy kis kéz lesz.*/
+  }
+  
+  .button,
+  #counter,
+  #timer {
+    border-radius: 15px;                                           /*A border-radius: 15px; azt jelenti, hogy a gombok és a számlálók sarkai lekerekítettek.*/
+  }
+  
+  .ui-element {
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);               /*A box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5); azt jelenti, hogy a gombok és a számlálók árnyéka 10px.*/
+  }
+  
+  .text-on-image {
+    position: relative;                                            /*A position: relative; azt jelenti, hogy a szöveg a képhez képest relatív pozícióban van.*/
+    display: flex;                                                 /*A display: flex; azt jelenti, hogy a szöveg flexboxként működik.*/
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .number-overlay {
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    font-size: 48pt;       
+    font-weight: bold;                                             /*A font-weight: bold; azt jelenti, hogy a szöveg vastag.*/
+    padding-left: 10pt;
+    letter-spacing: 20pt;                                          /*A letter-spacing: 20pt; azt jelenti, hogy a szöveg betűköze 20pt.*/
+    color: rgba(0, 0, 0, 0.75);
+    text-shadow: 1px 1px rgba(255, 255, 255, 0.75), -1px -1px #444;
+  }

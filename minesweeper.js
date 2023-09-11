@@ -1,8 +1,6 @@
 const canvas = document.getElementById("myCanvas");     // a myCanvas id-jű canvas elemet eltároljuk a canvas változóban
 const c = canvas.getContext("2d");                      // a canvas változó contextjét eltároljuk a c változóban
 
-
-
 const size = 50;                                        // a size változóba eltároljuk a 50 értéket
 const columns = canvas.width / size;                    // a columns változóba eltároljuk a canvas szélességét osztva a size változóval. A canvas a képernyőn megjelenő terület, amelyen rajzolunk. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
 const rows = canvas.height / size;                      // a rows változóba eltároljuk a canvas magasságát osztva a size változóval
@@ -28,7 +26,7 @@ placeMines(map, mineCount);                             // meghívjuk a placeMin
          
 console.log(map);                                        // kiírjuk a map tömböt a konzolra
 
-drawMap();                                               // meghívjuk a drawMap függvényt
+drawMap();                                               // meghívjuk a drawMap függvényt és képeket jelenít meg a canvason
 
 function placeMines(map, mineCount) {                    // placeMines függvény, amelynek átadjuk a map és mineCount változó értékét
    let mines = 0;                                        // a mines változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány akna van a pályán

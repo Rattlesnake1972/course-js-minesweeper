@@ -2,12 +2,26 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">                         <!-- ez a két meta tag kell a reszponzivitáshoz-->
     <title>Minesweeper</title>
+    <link href="https://fonts.cdnfonts.com/css/caveat" rel="stylesheet">                           <!-- ez a font a számokhoz -->
+    <link rel="stylesheet" href="minesweeper.css">                                                 <!-- ez a saját css -->
 </head>
 <body>
-    <h1>Minesweeper - Aknakereső</h1>
-    <canvas id="myCanvas" width="800" height="600" style="border: 1px solid black;"></canvas>
+    <main>                                                                                         <!-- ez a főtartalom -->
+        <div id="control-panel">                                                                   <!-- ez a vezérlőpanel -->
+          <div class="text-on-image">                                                              <!-- ez a szöveg a számlálóhoz -->
+            <img id="counter" class="ui-element" src="assets/counter.png" height="80">             <!-- ez a számláló -->
+            <span id="mine-count" class="number-overlay">000</span>                                <!-- ez a számláló száma -->
+          </div>
+          <img id="action-button" class="button ui-element" src="assets/button-start.png" height="80">               <!-- ez a start gomb -->
+          <div class="text-on-image">                                                                                <!-- ez a szöveg az időzítőhöz -->
+            <img id="timer" class="ui-element" src="assets/counter.png" height="80">                                 <!-- ez az időzítő -->
+            <span id="time" class="number-overlay">000</span>                                                        <!-- ez az időzítő száma -->
+          </div>
+        </div>
+        <canvas id="myCanvas" class="ui-element" width="800" height="600"></canvas>                 <!-- ez a játéktér -->
+    </main>
     <img id="hidden" src="assets/hidden.png" style="display: none;">
     <img id="mine" src="assets/mine.png" style="display: none;">
     <img id="field-0" src="assets/0.png" style="display: none;">
