@@ -68,27 +68,27 @@ function whenAllImagesLoaded(onAllImagesLoaded, loadTime = 0) {                 
 function createMap() {                                      // createMap függvény a játék téképét, megjelenését hozza létre
     let map = [];                                           // a map tömböt létrehozzuk
     for (let j = 0; j < rows; j++) {                        // for ciklus, amely a rows változó értékéig megy, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete
-        let row = [];                                           // a row tömböt létrehozzuk, amelyet a map tömbbe fogunk pusholni. A push metódus a tömb végére fűzi hozzá az elemet.
-        for (let i = 0; i < columns; i++) {                     // for ciklus, amely a columns változó értékéig megy, amely nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete.
-            row[i] = 0;                                         // a row tömb i-edik, valahányadik elemébe 0-t rakunk. Ezt azt eredményezi, hogy a row tömbbe annyi 0 kerül, ahány oszlop van a pályán. Jelen 
-        }                                                       // esetben 16, 12 sorban.
-        map[j] = row;                                          // a map tömbbe pusholjuk a row tömböt, amelynek az értékei 0-k. A map tömbbe annyi row tömb kerül, ahány sor van a pályán                                             
+        let row = [];                                       // a row tömböt létrehozzuk, amelyet a map tömbbe fogunk pusholni. A push metódus a tömb végére fűzi hozzá az elemet.
+        for (let i = 0; i < columns; i++) {                 // for ciklus, amely a columns változó értékéig megy, amely nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete.
+            row[i] = 0;                                     // a row tömb i-edik, valahányadik elemébe 0-t rakunk. Ezt azt eredményezi, hogy a row tömbbe annyi 0 kerül, ahány oszlop van a pályán. Jelen 
+        }                                                   // esetben 16, 12 sorban.
+        map[j] = row;                                       // a map tömbbe pusholjuk a row tömböt, amelynek az értékei 0-k. A map tömbbe annyi row tömb kerül, ahány sor van a pályán                                             
     }
-    return map;                                                 // visszatérünk a map tömbbel
+    return map;                                             // visszatérünk a map tömbbel
 }
 
-function drawMap() {                                            // drawMap függvény a canvason jelenít meg képeket
-    for (let colI = 0; colI < columns; colI++) {                // for ciklus, amely a columns változó értékéig megy, ami nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete
-        for (let rowI = 0; rowI < rows; rowI++) {               // for ciklus, amely a rows változó értékéig megy, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete
-            let field = [map[rowI][colI]];                      // a field változóba eltároljuk a map tömb rowI-edik és colI-edik tömbjének valahányadik elemét
-            let image = images[field];                          // az image változóba eltároljuk a images objektum field kulcsú elemének értékét
-            drawImage(image, colI * size, rowI * size);         // meghívjuk a drawImage függvényt, amelynek átadjuk az i és j változó értékét, amelyek a for ciklusok változói, és a size változót, ami a hidden kép mérete
+function drawMap() {                                        // drawMap függvény a canvason jelenít meg képeket
+    for (let colI = 0; colI < columns; colI++) {            // for ciklus, amely a columns változó értékéig megy, ami nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete
+        for (let rowI = 0; rowI < rows; rowI++) {           // for ciklus, amely a rows változó értékéig megy, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete
+            let field = [map[rowI][colI]];                  // a field változóba eltároljuk a map tömb rowI-edik és colI-edik tömbjének valahányadik elemét
+            let image = images[field];                      // az image változóba eltároljuk a images objektum field kulcsú elemének értékét
+            drawImage(image, colI * size, rowI * size);     // meghívjuk a drawImage függvényt, amelynek átadjuk az i és j változó értékét, amelyek a for ciklusok változói, és a size változót, ami a hidden kép mérete
         }
     }
 }
 
-function drawImage(image, x, y) {                               // drawImage függvény, amelynek átadjuk az image, x és y változó értékét
-    c.drawImage(image, x, y, size, size);                       // a canvas contextjének drawImage metódusával kirajzoljuk az image képet a megadott x és y koordinátákra, a size változóval meghatározott méretben
+function drawImage(image, x, y) {                           // drawImage függvény, amelynek átadjuk az image, x és y változó értékét
+    c.drawImage(image, x, y, size, size);                   // a canvas contextjének drawImage metódusával kirajzoljuk az image képet a megadott x és y koordinátákra, a size változóval meghatározott méretben
 }
 
 // a const változók értékét nem lehet megváltoztatni, a let változók értékét lehet megváltoztatni, var változó használata nem ajánlott, mert globális változóvá válik, amelyet bárhol meg lehet változtatni
