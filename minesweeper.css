@@ -24,7 +24,7 @@
     display: flex;                                                /*A display: flex; azt jelenti, hogy a control-panel flexboxként működik.*/
     align-items: center;    
     justify-content: space-between;                               /*A justify-content: space-between; azt jelenti, hogy a control-panel flexboxként működik, és a benne lévő elemeket a középre igazítjuk, de a közöttük lévő távolság a lehető legnagyobb.*/ 
-    margin: 2vh 0;
+    margin: 2vh 0;                                                
   }
   
   .button {
