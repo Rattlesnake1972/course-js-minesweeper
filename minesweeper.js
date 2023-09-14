@@ -39,6 +39,24 @@ function calculateFieldValues(map) {                     // calculateFieldValues
   }
 }
 
+function findNeighbourFields(map, rowI, colI) {   // findNeighbourFields függvény, amelynek átadjuk a map, rowIndex és columnIndex változó értékét
+  let neighbourCoordinates = [];                  // a neighbourCoordinates változóba eltároljuk a [] - üres tömb - értéket
+  for (let row = rowI - 1; row <= rowI + 1; row++) {    // for ciklus, amely a rowI változó értékéből kivon 1-et, és addig megy, amíg a rowI változó értékéhez hozzáad 1-et, legenerálja a sorindexeket
+    for (let col = colI - 1; col <= colI + 1; col++) {  // for ciklus, amely a colI változó értékéből kivon 1-et, és addig megy, amíg a colI változó értékéhez hozzáad 1-et, legenrálja az oszlopindexeket
+      if (row >= 0 && row < rows && col >= 0 && col < columns) {   // if feltétel, amely akkor fut le, ha a row változó értéke nagyobb vagy egyenlő 0-val, és kisebb, mint a rows változó értéke, és a col változó értéke nagyobb vagy egyenlő 0-val, és kisebb, mint a columns változó értéke, magyarul a canvason kívül eső sorokat és oszlopokat nem veszi figyelembe
+        if (row !== rowI || col !== colI) {                      // if feltétel, amely akkor fut le, ha a row változó értéke nem egyenlő a rowI változó értékével, vagy a col változó értéke nem egyenlő a colI változó értékével, magyarul a középső mezőt nem veszi figyelembe
+          neighbourCoordinates.push({row: row, col: col});       // a neighbourCoordinates tömbbe pusholjuk a row és col változó értékét, amelyek a for ciklusok változói
+        }
+      }
+    }
+  }
+  return neighbourCoordinates;                                  // visszatérünk a neighbourCoordinates tömbbel
+}
+
+
+
+
+
 
 
 function placeMines(map, mineCount) {                    // placeMines függvény, amelynek átadjuk a map és mineCount változó értékét
