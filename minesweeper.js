@@ -23,6 +23,7 @@ const images = {
 
 let map = createMap();                                  // a map változóba eltároljuk a createMap függvény visszatérési értékét, ami a map tömböt adja vissza
 placeMines(map, mineCount);                             // meghívjuk a placeMines függvényt, amelynek átadjuk a map és mineCount változó értékét
+calculateFieldValues(map);                              // meghívjuk a calculateFieldValues függvényt, amelynek átadjuk a map változó értékét
          
 console.log(map);                                        // kiírjuk a map tömböt a konzolra
 
@@ -32,11 +33,26 @@ function calculateFieldValues(map) {                     // calculateFieldValues
   for (let rowI = 0; rowI < rows; rowI++) {              // for ciklus, amely a rows változó értékéig megy, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete
     for (let colI = 0; colI < columns; colI++) {         // for ciklus, amely a columns változó értékéig megy, ami nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete
       let field = map[rowI][colI];                       // a field változóba eltároljuk a map tömb rowI-edik és colI-edik tömbjének valahányadik elemét
-      if (field !== mine) {                              // if feltétel, amely akkor fut le, ha a field változó értéke nem egyenlő a mine változó értékével
+      if (field !== mine) {                              // if feltétel, amely akkor fut le, ha a field változó értéke nem egyenlő a mine változó értékével. Ha nem akna, akkor számot kell kirajzolni a mezőre
         let neighbourCoordinates = findNeighbourFields(map, rowI, colI);    // a neighbourCoordinates változóba eltároljuk a findNeighbourFields függvény visszatérési értékét, amelynek átadjuk a map, rowI (rowIndex röviden) és colI (columnIndex röviden) változó értékét
+        let mineCount = countMines(map, neighbourCoordinates);                 // a mineCount változóba eltároljuk a countMines függvény visszatérési értékét, amelynek átadjuk a map és neighbourCoordinates változó értékét
+        map[rowI][colI] = mineCount;                                           // a map tömb rowI-edik és colI-edik tömbjének valahányadik elemébe beírjuk a mineCount változó értékét
+
       }
     }
   }
+}
+
+function countMines(map, coordinates) {         // countMines függvény, amelynek átadjuk a map és neighbourCoordinates változó értékét
+  let mineCount = 0;                                     // a mineCount változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány akna van a pályán
+  for (let i = 0; i < coordinates.length; i++) {         // for ciklus, amely a coordinates tömb értékéig megy, ami nem más mint a neighbourCoordinates tömb, amelyet a findNeighbourFields függvény ad vissza
+    let coordinate = coordinates[i];                     // a coordinate változóba eltároljuk a coordinates tömb i-edik, valahányadik elemét
+    let field = map[coordinate.row][coordinate.col];     // a field változóba eltároljuk a map tömb coordinate.row-edik és coordinate.col-edik tömbjének valahányadik elemét
+    if (field === mine) {                                // if feltétel, amely akkor fut le, ha a field változó értéke egyenlő a mine változó értékével
+      mineCount++;                                       // a mineCount változó értékét növeljük eggyel
+    }
+  }
+  return mineCount;                                      // visszatérünk a mineCount változó értékével
 }
 
 function findNeighbourFields(map, rowI, colI) {   // findNeighbourFields függvény, amelynek átadjuk a map, rowIndex és columnIndex változó értékét
@@ -52,12 +68,6 @@ function findNeighbourFields(map, rowI, colI) {   // findNeighbourFields függv�
   }
   return neighbourCoordinates;                                  // visszatérünk a neighbourCoordinates tömbbel
 }
-
-
-
-
-
-
 
 function placeMines(map, mineCount) {                    // placeMines függvény, amelynek átadjuk a map és mineCount változó értékét
    let mines = 0;                                        // a mines változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány akna van a pályán
