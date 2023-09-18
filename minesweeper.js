@@ -31,6 +31,16 @@ console.log(map);                                        // kiírjuk a map tömb
 
 whenAllImagesLoaded(drawMap);                            // Amikor az összes kép betöltődött, meghívjuk a drawMap függvényt, hogy a képek frissítéskor mindig megjelenjenek a canvason
 
+canvas.addEventListener('click', function(event) {       // a canvas változóhoz hozzáadunk egy click eseményfigyelőt, amelynek átadjuk az event paramétert
+  const x = event.offsetX;                                  // az x változóba eltároljuk az event.offsetX értékét, ami a kattintás x koordinátája
+  const y = event.offsetY;                                  // az y változóba eltároljuk az event.offsetY értékét, ami a kattintás y koordinátája
+  const col = Math.floor(x / size);                        // a colI változóba eltároljuk a x változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
+  const row = Math.floor(y / size);                        // a rowI változóba eltároljuk a y változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
+  exploredMap[row][col] = true;                            // az exploredMap tömb row-edik és col-edik tömbjének valahányadik elemébe beírjuk az igaz értéket, vagyis felfedjük a mezőt
+  drawMap();                                               // meghívjuk a drawMap függvényt, amely a canvason jelenít meg képeket
+});
+  
+
 function calculateFieldValues(map) {                     // calculateFieldValues függvény, amelynek átadjuk a map változó értékét
   for (let rowI = 0; rowI < rows; rowI++) {              // for ciklus, amely a rows változó értékéig megy, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete
     for (let colI = 0; colI < columns; colI++) {         // for ciklus, amely a columns változó értékéig megy, ami nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete
@@ -45,7 +55,7 @@ function calculateFieldValues(map) {                     // calculateFieldValues
   }
 }
 
-function countMines(map, coordinates) {         // countMines függvény, amelynek átadjuk a map és neighbourCoordinates változó értékét
+function countMines(map, coordinates) {                  // countMines függvény, amelynek átadjuk a map és neighbourCoordinates változó értékét
   let mineCount = 0;                                     // a mineCount változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány akna van a pályán
   for (let i = 0; i < coordinates.length; i++) {         // for ciklus, amely a coordinates tömb értékéig megy, ami nem más mint a neighbourCoordinates tömb, amelyet a findNeighbourFields függvény ad vissza
     let coordinate = coordinates[i];                     // a coordinate változóba eltároljuk a coordinates tömb i-edik, valahányadik elemét
