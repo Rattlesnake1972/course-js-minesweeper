@@ -8,34 +8,35 @@
     <link rel="stylesheet" href="minesweeper.css">                                                 <!-- ez a saját css -->
 </head>
 <body>
-    <main>                                                                                         <!-- ez a főtartalom -->
-        <div id="control-panel">                                                                   <!-- ez a vezérlőpanel -->
-          <div class="text-on-image">                                                              <!-- ez a szöveg a számlálóhoz -->
-            <img id="counter" class="ui-element" src="assets/counter.png" height="80">             <!-- ez a számláló -->
-            <span id="mine-count" class="number-overlay">000</span>                                <!-- ez a számláló száma -->
-          </div>
-          <img id="action-button" class="button ui-element" src="assets/button-start.png" height="80">               <!-- ez a start gomb -->
-          <div class="text-on-image">                                                                                <!-- ez a szöveg az időzítőhöz -->
-            <img id="timer" class="ui-element" src="assets/counter.png" height="80">                                 <!-- ez az időzítő -->
-            <span id="time" class="number-overlay">000</span>                                                        <!-- ez az időzítő száma -->
-          </div>
-        </div>
-        <canvas id="myCanvas" class="ui-element" width="800" height="600"></canvas>                 <!-- ez a játéktér -->
-    </main>
-    <img id="hidden" src="assets/hidden.png" style="display: none;">
-    <img id="mine" src="assets/mine.png" style="display: none;">
-    <img id="exploded-mine" src="assets/exploded-mine.png" style="display: none;">
-    <img id="field-0" src="assets/0.png" style="display: none;">
-    <img id="field-1" src="assets/1.png" style="display: none;">
-    <img id="field-2" src="assets/2.png" style="display: none;">
-    <img id="field-3" src="assets/3.png" style="display: none;">
-    <img id="field-4" src="assets/4.png" style="display: none;">
-    <img id="field-5" src="assets/5.png" style="display: none;">
-    <img id="field-6" src="assets/6.png" style="display: none;">
-    <img id="field-7" src="assets/7.png" style="display: none;">
-    <img id="field-8" src="assets/8.png" style="display: none;">
-    <img id="flag" src="assets/flag.png" style="display: none;">
-    <img id="flagged-wrong" src="assets/flagged-wrong.png" style="display: none;">
-    <script src="minesweeper.js"></script>
+  <main>                                                                                         <!-- ez a főtartalom -->
+    <div id="control-panel">                                                                   <!-- ez a vezérlőpanel -->
+      <div class="text-on-image">                                                              <!-- ez a szöveg a számlálóhoz -->
+        <img id="counter" class="ui-element" src="assets/counter.png" height="80">             <!-- ez a számláló -->
+        <span id="mine-count" class="number-overlay">000</span>                                <!-- ez a számláló száma -->
+      </div>
+      <img id="action-button" class="button ui-element" src="assets/button-start.png" height="80">               <!-- ez a start gomb -->
+      <div class="text-on-image">                                                                                <!-- ez a szöveg az időzítőhöz -->
+        <img id="timer" class="ui-element" src="assets/counter.png" height="80">                                 <!-- ez az időzítő -->
+        <span id="time" class="number-overlay">000</span>                                                        <!-- ez az időzítő száma -->
+      </div>
+    </div>
+    <canvas id="myCanvas" class="ui-element" width="800" height="600"></canvas>                 <!-- ez a játéktér -->
+  </main>
+  <img id="hidden" src="assets/hidden.png" style="display: none;">
+  <img id="mine" src="assets/mine.png" style="display: none;">
+  <img id="exploded-mine" src="assets/exploded-mine.png" style="display: none;">
+  <img id="field-0" src="assets/0.png" style="display: none;">
+  <img id="field-1" src="assets/1.png" style="display: none;">
+  <img id="field-2" src="assets/2.png" style="display: none;">
+  <img id="field-3" src="assets/3.png" style="display: none;">
+  <img id="field-4" src="assets/4.png" style="display: none;">
+  <img id="field-5" src="assets/5.png" style="display: none;">
+  <img id="field-6" src="assets/6.png" style="display: none;">
+  <img id="field-7" src="assets/7.png" style="display: none;">
+  <img id="field-8" src="assets/8.png" style="display: none;">
+  <img id="flag" src="assets/flag.png" style="display: none;">
+  <img id="button-lost" src="assets/button-lost.png" style="display: none;">
+  <img id="flagged-wrong" src="assets/flagged-wrong.png" style="display: none;">
+  <script src="minesweeper.js"></script>
 </body>
 </html>

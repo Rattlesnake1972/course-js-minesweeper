@@ -1,5 +1,6 @@
-const canvas = document.getElementById("myCanvas");     // a myCanvas id-jű canvas elemet eltároljuk a canvas változóban. A document objektum egy metódusa a getElementById, amely visszaadja a megadott id-jű elemet, amelyet a canvas változóban tárolunk el. A getElementById metódusnak egy paramétere van, amely a keresett elem id-je. A canvas egy HTML elem, amelyet a HTML dokumentumban a <canvas> taggel hozunk létre. A canvas egy olyan elem, amelyen rajzolni lehet. A canvas egy objektum, amelynek van egy getContext metódusa, amely visszaadja a canvas contextjét, amelyet a c változóban tárolunk el. A canvas contextje a rajzolás alapvető eszköze, amely lehetővé teszi a rajzolást a canvason. A getContext metódusnak egy paramétere van, amely a context típusát határozza meg. A 2d a 2 dimenziós rajzolást jelenti, ami a leggyakrabban használt.
-const c = canvas.getContext("2d");                      // a canvas változó contextjét eltároljuk a c változóban. A context a rajzolás alapvető eszköze, amely lehetővé teszi a rajzolást a canvason. A getContext metódus a canvas objektum egy metódusa, amely visszaadja a canvas contextjét, amelyet a c változóban tárolunk el. A getContext metódusnak egy paramétere van, amely a context típusát határozza meg. A 2d a 2 dimenziós rajzolást jelenti, ami a leggyakrabban használt. 
+const canvas = document.getElementById('myCanvas');                                   // a myCanvas id-jű canvas elemet eltároljuk a canvas változóban. A document objektum egy metódusa a getElementById, amely visszaadja a megadott id-jű elemet, amelyet a canvas változóban tárolunk el. A getElementById metódusnak egy paramétere van, amely a keresett elem id-je. A canvas egy HTML elem, amelyet a HTML dokumentumban a <canvas> taggel hozunk létre. A canvas egy olyan elem, amelyen rajzolni lehet. A canvas egy objektum, amelynek van egy getContext metódusa, amely visszaadja a canvas contextjét, amelyet a c változóban tárolunk el. A canvas contextje a rajzolás alapvető eszköze, amely lehetővé teszi a rajzolást a canvason. A getContext metódusnak egy paramétere van, amely a context típusát határozza meg. A 2d a 2 dimenziós rajzolást jelenti, ami a leggyakrabban használt.
+const c = canvas.getContext('2d');                                                   // a canvas változó contextjét eltároljuk a c változóban. A context a rajzolás alapvető eszköze, amely lehetővé teszi a rajzolást a canvason. A getContext metódus a canvas objektum egy metódusa, amely visszaadja a canvas contextjét, amelyet a c változóban tárolunk el. A getContext metódusnak egy paramétere van, amely a context típusát határozza meg. A 2d a 2 dimenziós rajzolást jelenti, ami a leggyakrabban használt. 
+const actionButton = document.getElementById('action.button');                      // az action id-jű gombot eltároljuk az actionButton változóban. A document objektum egy metódusa a getElementById, amely visszaadja a megadott id-jű elemet, amelyet az actionButton változóban tárolunk el. A getElementById metódusnak egy paramétere van, amely a keresett elem id-je. A gomb egy HTML elem, amelyet a HTML dokumentumban a <button> taggel hozunk létre. A gomb egy olyan elem, amelyre kattintva lefut egy függvény.
 
 const size = 50;                                        // a size változóba eltároljuk a 50 értéket. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
 const columns = canvas.width / size;                    // a columns változóba eltároljuk a canvas szélességét osztva a size változóval. A canvas a képernyőn megjelenő terület, amelyen rajzolunk. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
@@ -7,19 +8,26 @@ const rows = canvas.height / size;                      // a rows változóba el
 const mine = 'mine';                                    // a mine változóba eltároljuk a mine stringet 
 const mineCount = 25;                                   // a mineCount változóba eltároljuk az 25 értéket, azaz 25 db akna lesz a pályán
 const images = {
-    'hidden': document.getElementById("hidden"),        // a hidden id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-    'mine': document.getElementById("mine"),            // a mine id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-    '0': document.getElementById("field-0"),            // a field-0 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-    '1': document.getElementById("field-1"),            // a field-1 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-    '2': document.getElementById("field-2"),            // a field-2 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-    '3': document.getElementById("field-3"),            // a field-3 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-    '4': document.getElementById("field-4"),            // a field-4 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-    '5': document.getElementById("field-5"),            // a field-5 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-    '6': document.getElementById("field-6"),            // a field-6 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-    '7': document.getElementById("field-7"),            // a field-7 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-    '8': document.getElementById("field-8"),            // a field-8 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-   
-}; 
+  'hidden': document.getElementById('hidden'),        // a hidden id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  'mine': document.getElementById('mine'),            // a mine id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '0': document.getElementById('field-0'),            // a field-0 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '1': document.getElementById('field-1'),            // a field-1 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '2': document.getElementById('field-2'),            // a field-2 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '3': document.getElementById('field-3'),            // a field-3 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '4': document.getElementById('field-4'),            // a field-4 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '5': document.getElementById('field-5'),            // a field-5 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '6': document.getElementById('field-6'),            // a field-6 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '7': document.getElementById('field-7'),            // a field-7 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '8': document.getElementById('field-8'),            // a field-8 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+};
+
+const buttons = {
+  start: 'assets/button-start.png',                   // a start gomb képét keresi meg a dokumentumban és eltárolja a buttons objektum start kulcsú elemében
+  lost: 'assets/button-lost.png',                     // a lost gomb képét keresi meg a dokumentumban és eltárolja a buttons objektum lost kulcsú elemében
+  won: 'assets/button-won.png',                       // a won gomb képét keresi meg a dokumentumban és eltárolja a buttons objektum won kulcsú elemében
+}
+
+let isGameOver = false;                                 // a isGameOver változóba eltároljuk a false értéket, ami azt jelenti, hogy a játék még nem ért véget
 
 let map = createMap();                                  // a map változóba eltároljuk a createMap függvény visszatérési értékét, ami a map tömböt adja vissza. A createMap függvény a játék térképét, megjelenését hozza létre. 
 let exploredMap = createExploredMap();                  // a exploredMap változóba eltároljuk a createExploredMap függvény visszatérési értékét, ami a exploredMap tömböt adja vissza. A már felfedett mezőket tárolja.
@@ -32,12 +40,17 @@ console.log(map);                                        // kiírjuk a map tömb
 whenAllImagesLoaded(drawMap);                            // Amikor az összes kép betöltődött, meghívjuk a drawMap függvényt, hogy a képek frissítéskor mindig megjelenjenek a canvason. A whenAllImagesLoaded függvény megvárja, amíg az összes kép betöltődik, és csak utána hívja meg a paraméterként kapott másik függvényt. Az első paraméter a meghívandó függvény, a második paraméter a betöltési idő, ami 0-ról indul. 
 
 canvas.addEventListener('click', function(event) {          // a canvas változóhoz hozzáadunk egy click eseményfigyelőt, amelynek átadjuk az event paramétert. Így a canvasra kattintva lefut a függvény. 
+  if (isGameOver) return;                                   // a return kulcsszóval visszatérünk, és nem fut le a kód tovább
   const x = event.offsetX;                                  // az x változóba eltároljuk az event.offsetX értékét, ami a kattintás x koordinátája. Az event egy objektum, amely az esemény adatait tartalmazza. Az offsetX és offsetY az esemény x és y koordinátáit tartalmazza. 
   const y = event.offsetY;                                  // az y változóba eltároljuk az event.offsetY értékét, ami a kattintás y koordinátája
   const col = Math.floor(x / size);                         // a col változóba eltároljuk a x változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
   const row = Math.floor(y / size);                         // a row változóba eltároljuk a y változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
   exploreField(row, col);                                   // meghívjuk a exploreField függvényt, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
   drawMap();                                                // meghívjuk a drawMap függvényt, amely a canvason jelenít meg képeket
+  if (map[row][col] === mine) {                             // if feltétel, amely akkor fut le, ha a map tömb row-edik és col-edik tömbjének valahányadik eleme egyenlő a mine változó értékével
+    isGameOver = true;                                      // a isGameOver változó értékét true-ra állítjuk, ami azt jelenti, hogy a játék véget ért
+    actionButton.src = buttons.lost;                        // az actionButton src-jébe beírjuk a buttons objektum lost kulcsú elemének értékét, ami a lost gomb képe. A mosolygós gombot lecseréljük a szomorú gombra 
+  }
 });
 
 function exploreField(row, col) {                           // exploreField függvény, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
