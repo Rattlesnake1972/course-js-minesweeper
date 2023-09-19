@@ -5,7 +5,7 @@ const size = 50;                                        // a size változóba el
 const columns = canvas.width / size;                    // a columns változóba eltároljuk a canvas szélességét osztva a size változóval. A canvas a képernyőn megjelenő terület, amelyen rajzolunk. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
 const rows = canvas.height / size;                      // a rows változóba eltároljuk a canvas magasságát osztva a size változóval 
 const mine = 'mine';                                    // a mine változóba eltároljuk a mine stringet 
-const mineCount = 25;                                    // a mineCount változóba eltároljuk az 25 értéket, azaz 25 db akna lesz a pályán
+const mineCount = 25;                                   // a mineCount változóba eltároljuk az 25 értéket, azaz 25 db akna lesz a pályán
 const images = {
     'hidden': document.getElementById("hidden"),        // a hidden id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
     'mine': document.getElementById("mine"),            // a mine id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
@@ -31,13 +31,13 @@ console.log(map);                                        // kiírjuk a map tömb
 
 whenAllImagesLoaded(drawMap);                            // Amikor az összes kép betöltődött, meghívjuk a drawMap függvényt, hogy a képek frissítéskor mindig megjelenjenek a canvason. A whenAllImagesLoaded függvény megvárja, amíg az összes kép betöltődik, és csak utána hívja meg a paraméterként kapott másik függvényt. Az első paraméter a meghívandó függvény, a második paraméter a betöltési idő, ami 0-ról indul. 
 
-canvas.addEventListener('click', function(event) {       // a canvas változóhoz hozzáadunk egy click eseményfigyelőt, amelynek átadjuk az event paramétert. Így a canvasra kattintva lefut a függvény. 
+canvas.addEventListener('click', function(event) {          // a canvas változóhoz hozzáadunk egy click eseményfigyelőt, amelynek átadjuk az event paramétert. Így a canvasra kattintva lefut a függvény. 
   const x = event.offsetX;                                  // az x változóba eltároljuk az event.offsetX értékét, ami a kattintás x koordinátája. Az event egy objektum, amely az esemény adatait tartalmazza. Az offsetX és offsetY az esemény x és y koordinátáit tartalmazza. 
   const y = event.offsetY;                                  // az y változóba eltároljuk az event.offsetY értékét, ami a kattintás y koordinátája
-  const col = Math.floor(x / size);                        // a col változóba eltároljuk a x változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
-  const row = Math.floor(y / size);                        // a row változóba eltároljuk a y változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
-  exploredMap[row][col] = true;                            // az exploredMap tömb row-edik és col-edik tömbjének valahányadik elemébe beírjuk az igaz értéket, vagyis felfedjük a mezőt
-  drawMap();                                               // meghívjuk a drawMap függvényt, amely a canvason jelenít meg képeket
+  const col = Math.floor(x / size);                         // a col változóba eltároljuk a x változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
+  const row = Math.floor(y / size);                         // a row változóba eltároljuk a y változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
+  exploredMap[row][col] = true;                             // az exploredMap tömb row-edik és col-edik tömbjének valahányadik elemébe beírjuk az igaz értéket, vagyis felfedjük a mezőt
+  drawMap();                                                // meghívjuk a drawMap függvényt, amely a canvason jelenít meg képeket
 });
   
 
@@ -46,9 +46,9 @@ function calculateFieldValues(map) {                     // calculateFieldValues
     for (let colI = 0; colI < columns; colI++) {         // for ciklus, amely a columns változó értékéig megy, ami nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete
       let field = map[rowI][colI];                       // a field változóba eltároljuk a map tömb rowI-edik és colI-edik tömbjének valahányadik elemét
       if (field !== mine) {                              // if feltétel, amely akkor fut le, ha a field változó értéke nem egyenlő a mine változó értékével. Ha nem akna, akkor számot kell kirajzolni a mezőre
-        let neighbourCoordinates = findNeighbourFields(map, rowI, colI);    // a neighbourCoordinates változóba eltároljuk a findNeighbourFields függvény visszatérési értékét, amelynek átadjuk a map, rowI (rowIndex röviden) és colI (columnIndex röviden) változó értékét
-        let mineCount = countMines(map, neighbourCoordinates);                 // a mineCount változóba eltároljuk a countMines függvény visszatérési értékét, amelynek átadjuk a map és neighbourCoordinates változó értékét
-        map[rowI][colI] = mineCount;                                           // a map tömb rowI-edik és colI-edik tömbjének valahányadik elemébe beírjuk a mineCount változó értékét
+        let neighbourCoordinates = findNeighbourFields(map, rowI, colI);        // a neighbourCoordinates változóba eltároljuk a findNeighbourFields függvény visszatérési értékét, amelynek átadjuk a map, rowI (rowIndex röviden) és colI (columnIndex röviden) változó értékét
+        let mineCount = countMines(map, neighbourCoordinates);                  // a mineCount változóba eltároljuk a countMines függvény visszatérési értékét, amelynek átadjuk a map és neighbourCoordinates változó értékét
+        map[rowI][colI] = mineCount;                                            // a map tömb rowI-edik és colI-edik tömbjének valahányadik elemébe beírjuk a mineCount változó értékét
 
       }
     }
@@ -67,13 +67,13 @@ function countMines(map, coordinates) {                  // countMines függvén
   return mineCount;                                      // visszatérünk a mineCount változó értékével
 }
 
-function findNeighbourFields(map, rowI, colI) {   // findNeighbourFields függvény, amelynek átadjuk a map, rowIndex és columnIndex változó értékét. A findNeighbourFields függvény megtalálja egy mező összes szomszédját.
-  let neighbourCoordinates = [];                  // a neighbourCoordinates változóba eltároljuk a [] - üres tömb - értéket
-  for (let row = rowI - 1; row <= rowI + 1; row++) {    // for ciklus, amely a rowI változó értékéből kivon 1-et, és addig megy, amíg a rowI változó értékéhez hozzáad 1-et, legenerálja a sorindexeket
-    for (let col = colI - 1; col <= colI + 1; col++) {  // for ciklus, amely a colI változó értékéből kivon 1-et, és addig megy, amíg a colI változó értékéhez hozzáad 1-et, legenrálja az oszlopindexeket
+function findNeighbourFields(map, rowI, colI) {                    // findNeighbourFields függvény, amelynek átadjuk a map, rowIndex és columnIndex változó értékét. A findNeighbourFields függvény megtalálja egy mező összes szomszédját.
+  let neighbourCoordinates = [];                                   // a neighbourCoordinates változóba eltároljuk a [] - üres tömb - értéket
+  for (let row = rowI - 1; row <= rowI + 1; row++) {               // for ciklus, amely a rowI változó értékéből kivon 1-et, és addig megy, amíg a rowI változó értékéhez hozzáad 1-et, legenerálja a sorindexeket
+    for (let col = colI - 1; col <= colI + 1; col++) {             // for ciklus, amely a colI változó értékéből kivon 1-et, és addig megy, amíg a colI változó értékéhez hozzáad 1-et, legenrálja az oszlopindexeket
       if (row >= 0 && row < rows && col >= 0 && col < columns) {   // if feltétel, amely akkor fut le, ha a row változó értéke nagyobb vagy egyenlő 0-val, és kisebb, mint a rows változó értéke, és a col változó értéke nagyobb vagy egyenlő 0-val, és kisebb, mint a columns változó értéke, magyarul a canvason kívül eső sorokat és oszlopokat nem veszi figyelembe
-        if (row !== rowI || col !== colI) {                      // if feltétel, amely akkor fut le, ha a row változó értéke nem egyenlő a rowI változó értékével, vagy a col változó értéke nem egyenlő a colI változó értékével, magyarul a középső mezőt nem veszi figyelembe
-          neighbourCoordinates.push({row: row, col: col});       // a neighbourCoordinates tömbbe pusholjuk a row és col változó értékét, amelyek a for ciklusok változói
+        if (row !== rowI || col !== colI) {                        // if feltétel, amely akkor fut le, ha a row változó értéke nem egyenlő a rowI változó értékével, vagy a col változó értéke nem egyenlő a colI változó értékével, magyarul a középső mezőt nem veszi figyelembe
+          neighbourCoordinates.push({row: row, col: col});         // a neighbourCoordinates tömbbe pusholjuk a row és col változó értékét, amelyek a for ciklusok változói
         }
       }
     }
@@ -148,9 +148,9 @@ function drawMap() {                                        // drawMap függvén
       if (exploredMap[rowI][colI] === false) {              // if feltétel, amely akkor fut le, ha a exploredMap tömb rowI-edik és colI-edik tömbjének valahányadik eleme false
         drawImage(images.hidden, colI * size, rowI * size); // meghívjuk a drawImage függvényt, amelynek átadjuk az i és j változó értékét, amelyek a for ciklusok változói, és a size változót, ami a hidden kép mérete
       } else {                                              // különben
-        let field = [map[rowI][colI]];                        // a field változóba eltároljuk a map tömb rowI-edik és colI-edik tömbjének valahányadik elemét
-        let image = images[field];                            // az image változóba eltároljuk a images objektum field kulcsú elemének értékét
-        drawImage(image, colI * size, rowI * size);           // meghívjuk a drawImage függvényt, amelynek átadjuk az i és j változó értékét, amelyek a for ciklusok változói, és a size változót, ami a hidden kép mérete
+        let field = [map[rowI][colI]];                      // a field változóba eltároljuk a map tömb rowI-edik és colI-edik tömbjének valahányadik elemét
+        let image = images[field];                          // az image változóba eltároljuk a images objektum field kulcsú elemének értékét
+        drawImage(image, colI * size, rowI * size);         // meghívjuk a drawImage függvényt, amelynek átadjuk az i és j változó értékét, amelyek a for ciklusok változói, és a size változót, ami a hidden kép mérete
       }
     }
   }
