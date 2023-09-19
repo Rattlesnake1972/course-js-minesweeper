@@ -1,10 +1,10 @@
-const canvas = document.getElementById("myCanvas");     // a myCanvas id-jű canvas elemet eltároljuk a canvas változóban
-const c = canvas.getContext("2d");                      // a canvas változó contextjét eltároljuk a c változóban
+const canvas = document.getElementById("myCanvas");     // a myCanvas id-jű canvas elemet eltároljuk a canvas változóban. A document objektum egy metódusa a getElementById, amely visszaadja a megadott id-jű elemet, amelyet a canvas változóban tárolunk el. A getElementById metódusnak egy paramétere van, amely a keresett elem id-je. A canvas egy HTML elem, amelyet a HTML dokumentumban a <canvas> taggel hozunk létre. A canvas egy olyan elem, amelyen rajzolni lehet. A canvas egy objektum, amelynek van egy getContext metódusa, amely visszaadja a canvas contextjét, amelyet a c változóban tárolunk el. A canvas contextje a rajzolás alapvető eszköze, amely lehetővé teszi a rajzolást a canvason. A getContext metódusnak egy paramétere van, amely a context típusát határozza meg. A 2d a 2 dimenziós rajzolást jelenti, ami a leggyakrabban használt.
+const c = canvas.getContext("2d");                      // a canvas változó contextjét eltároljuk a c változóban. A context a rajzolás alapvető eszköze, amely lehetővé teszi a rajzolást a canvason. A getContext metódus a canvas objektum egy metódusa, amely visszaadja a canvas contextjét, amelyet a c változóban tárolunk el. A getContext metódusnak egy paramétere van, amely a context típusát határozza meg. A 2d a 2 dimenziós rajzolást jelenti, ami a leggyakrabban használt. 
 
-const size = 50;                                        // a size változóba eltároljuk a 50 értéket
+const size = 50;                                        // a size változóba eltároljuk a 50 értéket. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
 const columns = canvas.width / size;                    // a columns változóba eltároljuk a canvas szélességét osztva a size változóval. A canvas a képernyőn megjelenő terület, amelyen rajzolunk. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
-const rows = canvas.height / size;                      // a rows változóba eltároljuk a canvas magasságát osztva a size változóval
-const mine = 'mine';                                    // a mine változóba eltároljuk a mine stringet
+const rows = canvas.height / size;                      // a rows változóba eltároljuk a canvas magasságát osztva a size változóval 
+const mine = 'mine';                                    // a mine változóba eltároljuk a mine stringet 
 const mineCount = 25;                                    // a mineCount változóba eltároljuk az 25 értéket, azaz 25 db akna lesz a pályán
 const images = {
     'hidden': document.getElementById("hidden"),        // a hidden id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
@@ -21,27 +21,27 @@ const images = {
    
 }; 
 
-let map = createMap();                                  // a map változóba eltároljuk a createMap függvény visszatérési értékét, ami a map tömböt adja vissza
-let exploredMap = createExploredMap();                  // a exploredMap változóba eltároljuk a createExploredMap függvény visszatérési értékét, ami a exploredMap tömböt adja vissza
-console.log(exploredMap);                               // kiírjuk a exploredMap tömböt a konzolra
-placeMines(map, mineCount);                             // meghívjuk a placeMines függvényt, amelynek átadjuk a map és mineCount változó értékét
-calculateFieldValues(map);                              // meghívjuk a calculateFieldValues függvényt, amelynek átadjuk a map változó értékét
+let map = createMap();                                  // a map változóba eltároljuk a createMap függvény visszatérési értékét, ami a map tömböt adja vissza. A createMap függvény a játék térképét, megjelenését hozza létre. 
+let exploredMap = createExploredMap();                  // a exploredMap változóba eltároljuk a createExploredMap függvény visszatérési értékét, ami a exploredMap tömböt adja vissza. A már felfedett mezőket tárolja.
+console.log(exploredMap);                               // kiírjuk a exploredMap tömböt a konzolra. Kiírja a tömböt, amelyben minden elem false, mert még nem fedtünk fel egy mezőt sem. 
+placeMines(map, mineCount);                             // meghívjuk a placeMines függvényt, amelynek átadjuk a map és mineCount változó értékét. A placeMines függvény a pályára helyezi az aknákat. 
+calculateFieldValues(map);                              // meghívjuk a calculateFieldValues függvényt, amelynek átadjuk a map változó értékét. A calculateFieldValues függvény kiszámolja, hogy egy mező mellett hány akna van. 
          
 console.log(map);                                        // kiírjuk a map tömböt a konzolra
 
-whenAllImagesLoaded(drawMap);                            // Amikor az összes kép betöltődött, meghívjuk a drawMap függvényt, hogy a képek frissítéskor mindig megjelenjenek a canvason
+whenAllImagesLoaded(drawMap);                            // Amikor az összes kép betöltődött, meghívjuk a drawMap függvényt, hogy a képek frissítéskor mindig megjelenjenek a canvason. A whenAllImagesLoaded függvény megvárja, amíg az összes kép betöltődik, és csak utána hívja meg a paraméterként kapott másik függvényt. Az első paraméter a meghívandó függvény, a második paraméter a betöltési idő, ami 0-ról indul. 
 
-canvas.addEventListener('click', function(event) {       // a canvas változóhoz hozzáadunk egy click eseményfigyelőt, amelynek átadjuk az event paramétert
-  const x = event.offsetX;                                  // az x változóba eltároljuk az event.offsetX értékét, ami a kattintás x koordinátája
+canvas.addEventListener('click', function(event) {       // a canvas változóhoz hozzáadunk egy click eseményfigyelőt, amelynek átadjuk az event paramétert. Így a canvasra kattintva lefut a függvény. 
+  const x = event.offsetX;                                  // az x változóba eltároljuk az event.offsetX értékét, ami a kattintás x koordinátája. Az event egy objektum, amely az esemény adatait tartalmazza. Az offsetX és offsetY az esemény x és y koordinátáit tartalmazza. 
   const y = event.offsetY;                                  // az y változóba eltároljuk az event.offsetY értékét, ami a kattintás y koordinátája
-  const col = Math.floor(x / size);                        // a colI változóba eltároljuk a x változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
-  const row = Math.floor(y / size);                        // a rowI változóba eltároljuk a y változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
+  const col = Math.floor(x / size);                        // a col változóba eltároljuk a x változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
+  const row = Math.floor(y / size);                        // a row változóba eltároljuk a y változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
   exploredMap[row][col] = true;                            // az exploredMap tömb row-edik és col-edik tömbjének valahányadik elemébe beírjuk az igaz értéket, vagyis felfedjük a mezőt
   drawMap();                                               // meghívjuk a drawMap függvényt, amely a canvason jelenít meg képeket
 });
   
 
-function calculateFieldValues(map) {                     // calculateFieldValues függvény, amelynek átadjuk a map változó értékét
+function calculateFieldValues(map) {                     // calculateFieldValues függvény, amelynek átadjuk a map változó értékét. A calculateFieldValues függvény kiszámolja, hogy egy mező mellett hány akna van. 
   for (let rowI = 0; rowI < rows; rowI++) {              // for ciklus, amely a rows változó értékéig megy, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete
     for (let colI = 0; colI < columns; colI++) {         // for ciklus, amely a columns változó értékéig megy, ami nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete
       let field = map[rowI][colI];                       // a field változóba eltároljuk a map tömb rowI-edik és colI-edik tömbjének valahányadik elemét
@@ -55,7 +55,7 @@ function calculateFieldValues(map) {                     // calculateFieldValues
   }
 }
 
-function countMines(map, coordinates) {                  // countMines függvény, amelynek átadjuk a map és neighbourCoordinates változó értékét
+function countMines(map, coordinates) {                  // countMines függvény, amelynek átadjuk a map és neighbourCoordinates változó értékét. A countMines függvény kiszámolja, hogy egy mező mellett hány akna van.
   let mineCount = 0;                                     // a mineCount változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány akna van a pályán
   for (let i = 0; i < coordinates.length; i++) {         // for ciklus, amely a coordinates tömb értékéig megy, ami nem más mint a neighbourCoordinates tömb, amelyet a findNeighbourFields függvény ad vissza
     let coordinate = coordinates[i];                     // a coordinate változóba eltároljuk a coordinates tömb i-edik, valahányadik elemét
@@ -67,7 +67,7 @@ function countMines(map, coordinates) {                  // countMines függvén
   return mineCount;                                      // visszatérünk a mineCount változó értékével
 }
 
-function findNeighbourFields(map, rowI, colI) {   // findNeighbourFields függvény, amelynek átadjuk a map, rowIndex és columnIndex változó értékét
+function findNeighbourFields(map, rowI, colI) {   // findNeighbourFields függvény, amelynek átadjuk a map, rowIndex és columnIndex változó értékét. A findNeighbourFields függvény megtalálja egy mező összes szomszédját.
   let neighbourCoordinates = [];                  // a neighbourCoordinates változóba eltároljuk a [] - üres tömb - értéket
   for (let row = rowI - 1; row <= rowI + 1; row++) {    // for ciklus, amely a rowI változó értékéből kivon 1-et, és addig megy, amíg a rowI változó értékéhez hozzáad 1-et, legenerálja a sorindexeket
     for (let col = colI - 1; col <= colI + 1; col++) {  // for ciklus, amely a colI változó értékéből kivon 1-et, és addig megy, amíg a colI változó értékéhez hozzáad 1-et, legenrálja az oszlopindexeket
@@ -78,7 +78,7 @@ function findNeighbourFields(map, rowI, colI) {   // findNeighbourFields függv�
       }
     }
   }
-  return neighbourCoordinates;                                  // visszatérünk a neighbourCoordinates tömbbel
+  return neighbourCoordinates;                                  // visszatérünk a neighbourCoordinates tömbbel. A neighbourCoordinates tömbben tároljuk el a szomszédos mezők sor- és oszlopindexeit.
 }
 
 function placeMines(map, mineCount) {                    // placeMines függvény, amelynek átadjuk a map és mineCount változó értékét
@@ -156,7 +156,7 @@ function drawMap() {                                        // drawMap függvén
   }
 }
 
-function drawImage(image, x, y) {                           // drawImage függvény, amelynek átadjuk az image, x és y változó értékét
+function drawImage(image, x, y) {                           // drawImage függvény, amelynek átadjuk az image, x és y változó értékét. A drawImage függvény a canvason jelenít meg képeket.
     c.drawImage(image, x, y, size, size);                   // a canvas contextjének drawImage metódusával kirajzoljuk az image képet a megadott x és y koordinátákra, a size változóval meghatározott méretben
 }
 
