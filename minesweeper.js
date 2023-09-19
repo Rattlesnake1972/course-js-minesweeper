@@ -36,9 +36,22 @@ canvas.addEventListener('click', function(event) {          // a canvas változ�
   const y = event.offsetY;                                  // az y változóba eltároljuk az event.offsetY értékét, ami a kattintás y koordinátája
   const col = Math.floor(x / size);                         // a col változóba eltároljuk a x változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
   const row = Math.floor(y / size);                         // a row változóba eltároljuk a y változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
-  exploredMap[row][col] = true;                             // az exploredMap tömb row-edik és col-edik tömbjének valahányadik elemébe beírjuk az igaz értéket, vagyis felfedjük a mezőt
+  exploreField(row, col);                                   // meghívjuk a exploreField függvényt, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
   drawMap();                                                // meghívjuk a drawMap függvényt, amely a canvason jelenít meg képeket
 });
+
+function exploreField(row, col) {                           // exploreField függvény, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
+  if (exploredMap[row][col] === false) {                    // if feltétel, amely akkor fut le, ha a exploredMap tömb row-edik és col-edik tömbjének valahányadik eleme false. A false azt jelenti, hogy a mezőt még nem fedtük fel.
+    exploredMap[row][col] = true;                           // a exploredMap tömb row-edik és col-edik tömbjének valahányadik elemébe beírjuk a true értéket. A true azt jelenti, hogy a mezőt már felfedtük. 
+    if (map[row][col] === 0) {                              // if feltétel, amely akkor fut le, ha a map tömb row-edik és col-edik tömbjének valahányadik eleme 0. A 0 azt jelenti, hogy a mező mellett nincs akna.
+      let neighbourCoordinates = findNeighbourFields(map, row, col);        // a neighbourCoordinates változóba eltároljuk a findNeighbourFields függvény visszatérési értékét, amelynek átadjuk a map, row (rowIndex röviden) és col (columnIndex röviden) változó értékét. A findNeighbourFields függvény megtalálja egy mező összes szomszédját. 
+      for (let i = 0; i < neighbourCoordinates.length; i++) {               // for ciklus, amely a neighbourCoordinates tömb értékéig megy, ami nem más mint a neighbourCoordinates tömb, amelyet a findNeighbourFields függvény ad vissza. A neighbourCoordinates tömbben tároljuk el a szomszédos mezők sor- és oszlopindexeit. 
+        let coordinate = neighbourCoordinates[i];                           // a coordinate változóba eltároljuk a neighbourCoordinates tömb i-edik, valahányadik elemét. A neighbourCoordinates tömbben tároljuk el a szomszédos mezők sor- és oszlopindexeit. 
+        exploreField(coordinate.row, coordinate.col);                       // meghívjuk a exploreField függvényt, amelynek átadjuk a coordinate.row és coordinate.col változó értékét. A exploreField függvény felfedi az üres mezőt. Ez a művelet a rekurzió. A rekurzió egy függvény, amely önmagát hívja meg. 
+      }
+    }
+  }
+}
   
 
 function calculateFieldValues(map) {                     // calculateFieldValues függvény, amelynek átadjuk a map változó értékét. A calculateFieldValues függvény kiszámolja, hogy egy mező mellett hány akna van. 
