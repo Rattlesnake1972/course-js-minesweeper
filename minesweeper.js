@@ -28,22 +28,28 @@ const buttons = {
 }
 
 let isGameOver = false;                                 // a isGameOver változóba eltároljuk a false értéket, ami azt jelenti, hogy a játék még nem ért véget
+let isFirstClick = true;                                // a isFirstClick változóba eltároljuk a true értéket, ami azt jelenti, hogy még nem kattintottunk a pályára
 
 let map = createMap();                                  // a map változóba eltároljuk a createMap függvény visszatérési értékét, ami a map tömböt adja vissza. A createMap függvény a játék térképét, megjelenését hozza létre. 
 let exploredMap = createExploredMap();                  // a exploredMap változóba eltároljuk a createExploredMap függvény visszatérési értékét, ami a exploredMap tömböt adja vissza. A már felfedett mezőket tárolja.
-placeMines(map, mineCount);                             // meghívjuk a placeMines függvényt, amelynek átadjuk a map és mineCount változó értékét. A placeMines függvény a pályára helyezi az aknákat. 
-calculateFieldValues(map);                              // meghívjuk a calculateFieldValues függvényt, amelynek átadjuk a map változó értékét. A calculateFieldValues függvény kiszámolja, hogy egy mező mellett hány akna van. 
+
          
 console.log(map);                                        // kiírjuk a map tömböt a konzolra
 
 whenAllImagesLoaded(drawMap);                            // Amikor az összes kép betöltődött, meghívjuk a drawMap függvényt, hogy a képek frissítéskor mindig megjelenjenek a canvason. A whenAllImagesLoaded függvény megvárja, amíg az összes kép betöltődik, és csak utána hívja meg a paraméterként kapott másik függvényt. Az első paraméter a meghívandó függvény, a második paraméter a betöltési idő, ami 0-ról indul. 
 
 canvas.addEventListener('click', function(event) {          // a canvas változóhoz hozzáadunk egy click eseményfigyelőt, amelynek átadjuk az event paramétert. Így a canvasra kattintva lefut a függvény. 
+                                // meghívjuk a calculateFieldValues függvényt, amelynek átadjuk a map változó értékét. A calculateFieldValues függvény kiszámolja, hogy egy mező mellett hány akna van.
   if (isGameOver) return;                                   // a return kulcsszóval visszatérünk, és nem fut le a kód tovább
   const x = event.offsetX;                                  // az x változóba eltároljuk az event.offsetX értékét, ami a kattintás x koordinátája. Az event egy objektum, amely az esemény adatait tartalmazza. Az offsetX és offsetY az esemény x és y koordinátáit tartalmazza. 
   const y = event.offsetY;                                  // az y változóba eltároljuk az event.offsetY értékét, ami a kattintás y koordinátája
   const col = Math.floor(x / size);                         // a col változóba eltároljuk a x változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
   const row = Math.floor(y / size);                         // a row változóba eltároljuk a y változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
+  if (isFirstClick) {                                       // if feltétel, amely akkor fut le, ha a isFirstClick változó értéke true. A true azt jelenti, hogy még nem kattintottunk a pályára
+    placeMines(map, mineCount, row, col);                   // meghívjuk a placeMines függvényt, amelynek átadjuk a map, mineCount, row és col változó értékét. A placeMines függvény elhelyezi a pályán az aknákat.
+    calculateFieldValues(map);                              // meghívjuk a calculateFieldValues függvényt, amelynek átadjuk a map változó értékét. A calculateFieldValues függvény kiszámolja, hogy egy mező mellett hány akna van.
+    isFirstClick = false;                                   // a isFirstClick változó értékét false-ra állítjuk, ami azt jelenti, hogy már kattintottunk a pályára
+  }
   exploreField(row, col);                                   // meghívjuk a exploreField függvényt, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
   drawMap();                                                // meghívjuk a drawMap függvényt, amely a canvason jelenít meg képeket
   if (map[row][col] === mine) {                             // if feltétel, amely akkor fut le, ha a map tömb row-edik és col-edik tömbjének valahányadik eleme egyenlő a mine változó értékével
@@ -106,14 +112,14 @@ function findNeighbourFields(map, rowI, colI) {                    // findNeighb
   return neighbourCoordinates;                                  // visszatérünk a neighbourCoordinates tömbbel. A neighbourCoordinates tömbben tároljuk el a szomszédos mezők sor- és oszlopindexeit.
 }
 
-function placeMines(map, mineCount) {                    // placeMines függvény, amelynek átadjuk a map és mineCount változó értékét
-   let mines = 0;                                        // a mines változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány akna van a pályán
-    while (mines < mineCount) {                          // while ciklus, amely addig fut, amíg a mines változó értéke kisebb, mint a mineCount változó értéke, ami 25
-        let x = Math.floor(Math.random() * columns);     // a x változóba eltároljuk a Math.floor(Math.random() * columns) értékét, ami a Math.floor metódus a Math objektum egy metódusa, amely lefelé kerekíti a megadott számot, a Math.random metódus pedig a Math objektum egy metódusa, amely egy 0 és 1 közötti véletlen számot ad vissza, a columns változó pedig a canvas szélessége osztva a size változóval, ami a hidden kép mérete
-        let y = Math.floor(Math.random() * rows);        // a y változóba eltároljuk a Math.floor(Math.random() * rows) értékét, ami a Math.floor metódus a Math objektum egy metódusa, amely lefelé kerekíti a megadott számot, a Math.random metódus pedig a Math objektum egy metódusa, amely egy 0 és 1 közötti véletlen számot ad vissza, a rows változó pedig a canvas magassága osztva a size változóval, ami a hidden kép mérete
-        if (map[y][x] !== mine) {                        // if feltétel, amely akkor fut le, ha a map tömb y-edik, és x-edik tömbjének valahányadik elemének értéke nem egyenlő a mine változó értékével
-            map[y][x] = mine;                            // a map tömb y-edik és x-edik tömbjének valahányadik elemébe beírjuk a mine változó értékét
-            mines++;                                     // a mines változó értékét növeljük eggyel
+function placeMines(map, mineCount, startRow, startCol) {                         // placeMines függvény, amelynek átadjuk a map, mineCount, startRow és startCol változó értékét. A placeMines függvény elhelyezi a pályán az aknákat.
+   let mines = 0;                                                                 // a mines változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány akna van a pályán
+    while (mines < mineCount) {                                                   // while ciklus, amely addig fut, amíg a mines változó értéke kisebb, mint a mineCount változó értéke, ami 25
+        let x = Math.floor(Math.random() * columns);                              // a x változóba eltároljuk a Math.floor(Math.random() * columns) értékét, ami a Math.floor metódus a Math objektum egy metódusa, amely lefelé kerekíti a megadott számot, a Math.random metódus pedig a Math objektum egy metódusa, amely egy 0 és 1 közötti véletlen számot ad vissza, a columns változó pedig a canvas szélessége osztva a size változóval, ami a hidden kép mérete
+        let y = Math.floor(Math.random() * rows);                                 // a y változóba eltároljuk a Math.floor(Math.random() * rows) értékét, ami a Math.floor metódus a Math objektum egy metódusa, amely lefelé kerekíti a megadott számot, a Math.random metódus pedig a Math objektum egy metódusa, amely egy 0 és 1 közötti véletlen számot ad vissza, a rows változó pedig a canvas magassága osztva a size változóval, ami a hidden kép mérete
+        if (x !== startCol && y !== startRow && map[y][x] !== mine) {             // if feltétel, amely akkor fut le, ha a x változó értéke nem egyenlő a startCol változó értékével, és a y változó értéke nem egyenlő a startRow változó értékével, és a map tömb y-edik és x-edik tömbjének valahányadik eleme nem egyenlő a mine változó értékével, magyarul a középső mezőt nem veszi figyelembe
+            map[y][x] = mine;                                                     // a map tömb y-edik és x-edik tömbjének valahányadik elemébe beírjuk a mine változó értékét
+            mines++;                                                              // a mines változó értékét növeljük eggyel
         }
     }
 }
