@@ -6,7 +6,7 @@ const size = 50;                                        // a size változóba el
 const columns = canvas.width / size;                    // a columns változóba eltároljuk a canvas szélességét osztva a size változóval. A canvas a képernyőn megjelenő terület, amelyen rajzolunk. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
 const rows = canvas.height / size;                      // a rows változóba eltároljuk a canvas magasságát osztva a size változóval 
 const mine = 'mine';                                    // a mine változóba eltároljuk a mine stringet 
-const mineCount = 20;                                   // a mineCount változóba eltároljuk az 20 értéket, azaz 20 db akna lesz a pályán
+const mineCount = 30;                                   // a mineCount változóba eltároljuk az 30 értéket, azaz 30 db akna lesz a pályán
 const images = {
   'hidden': document.getElementById('hidden'),        // a hidden id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
   'mine': document.getElementById('mine'),            // a mine id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
@@ -29,12 +29,13 @@ const buttons = {
 
 let isGameOver = false;                                 // a isGameOver változóba eltároljuk a false értéket, ami azt jelenti, hogy a játék még nem ért véget
 let isFirstClick = true;                                // a isFirstClick változóba eltároljuk a true értéket, ami azt jelenti, hogy még nem kattintottunk a pályára
+let exploredFields = 0;                                 // a exploredFields változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány mezőt fedtünk fel a pályán
 
 let map = createMap();                                  // a map változóba eltároljuk a createMap függvény visszatérési értékét, ami a map tömböt adja vissza. A createMap függvény a játék térképét, megjelenését hozza létre. 
 let exploredMap = createExploredMap();                  // a exploredMap változóba eltároljuk a createExploredMap függvény visszatérési értékét, ami a exploredMap tömböt adja vissza. A már felfedett mezőket tárolja.
 
          
-console.log(map);                                        // kiírjuk a map tömböt a konzolra
+//console.log(map);                                        // kiírjuk a map tömböt a konzolra
 
 whenAllImagesLoaded(drawMap);                            // Amikor az összes kép betöltődött, meghívjuk a drawMap függvényt, hogy a képek frissítéskor mindig megjelenjenek a canvason. A whenAllImagesLoaded függvény megvárja, amíg az összes kép betöltődik, és csak utána hívja meg a paraméterként kapott másik függvényt. Az első paraméter a meghívandó függvény, a második paraméter a betöltési idő, ami 0-ról indul. 
 
@@ -55,11 +56,15 @@ canvas.addEventListener('click', function(event) {          // a canvas változ�
   if (map[row][col] === mine) {                             // if feltétel, amely akkor fut le, ha a map tömb row-edik és col-edik tömbjének valahányadik eleme egyenlő a mine változó értékével
     isGameOver = true;                                      // a isGameOver változó értékét true-ra állítjuk, ami azt jelenti, hogy a játék véget ért
     actionButton.src = buttons.lost;                        // az actionButton src-jébe beírjuk a buttons objektum lost kulcsú elemének értékét, ami a lost gomb képe. A mosolygós gombot lecseréljük a szomorú gombra 
+  } else if (exploredFields === (rows * columns) - mineCount) {   // else if feltétel, amely akkor fut le, ha a exploredFields változó értéke egyenlő a rows és columns változók szorzatából kivonva a mineCount változó értékét. A rows változó értéke nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete, a columns változó értéke nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete. A exploredFields változó értéke pedig az a mezők száma, amelyeket már felfedtünk. Ha a feltétel teljesül, akkor a játékos nyert.
+    isGameOver = true;                                      // a isGameOver változó értékét true-ra állítjuk, ami azt jelenti, hogy a játék véget ért
+    actionButton.src = buttons.won;                         // az actionButton src-jébe beírjuk a buttons objektum won kulcsú elemének értékét, ami a won gomb képe. A mosolygós gombot lecseréljük a nyerő gombra
   }
 });
 
 function exploreField(row, col) {                           // exploreField függvény, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
   if (exploredMap[row][col] === false) {                    // if feltétel, amely akkor fut le, ha a exploredMap tömb row-edik és col-edik tömbjének valahányadik eleme false. A false azt jelenti, hogy a mezőt még nem fedtük fel.
+    exploredFields++;                                       // a exploredFields változó értékét növeljük eggyel
     exploredMap[row][col] = true;                           // a exploredMap tömb row-edik és col-edik tömbjének valahányadik elemébe beírjuk a true értéket. A true azt jelenti, hogy a mezőt már felfedtük. 
     if (map[row][col] === 0) {                              // if feltétel, amely akkor fut le, ha a map tömb row-edik és col-edik tömbjének valahányadik eleme 0. A 0 azt jelenti, hogy a mező mellett nincs akna.
       let neighbourCoordinates = findNeighbourFields(map, row, col);        // a neighbourCoordinates változóba eltároljuk a findNeighbourFields függvény visszatérési értékét, amelynek átadjuk a map, row (rowIndex röviden) és col (columnIndex röviden) változó értékét. A findNeighbourFields függvény megtalálja egy mező összes szomszédját. 
