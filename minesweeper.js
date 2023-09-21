@@ -6,7 +6,7 @@ const size = 50;                                        // a size változóba el
 const columns = canvas.width / size;                    // a columns változóba eltároljuk a canvas szélességét osztva a size változóval. A canvas a képernyőn megjelenő terület, amelyen rajzolunk. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
 const rows = canvas.height / size;                      // a rows változóba eltároljuk a canvas magasságát osztva a size változóval 
 const mine = 'mine';                                    // a mine változóba eltároljuk a mine stringet 
-const mineCount = 30;                                   // a mineCount változóba eltároljuk az 30 értéket, azaz 30 db akna lesz a pályán
+const mineCount = 10;                                   // a mineCount változóba eltároljuk az 30 értéket, azaz 30 db akna lesz a pályán
 const images = {
   'hidden': document.getElementById('hidden'),        // a hidden id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
   'mine': document.getElementById('mine'),            // a mine id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
@@ -21,26 +21,26 @@ const images = {
   '8': document.getElementById('field-8'),            // a field-8 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
 };
 
+
+
 const buttons = {
   start: 'assets/button-start.png',                   // a start gomb képét keresi meg a dokumentumban és eltárolja a buttons objektum start kulcsú elemében
   lost: 'assets/button-lost.png',                     // a lost gomb képét keresi meg a dokumentumban és eltárolja a buttons objektum lost kulcsú elemében
   won: 'assets/button-won.png',                       // a won gomb képét keresi meg a dokumentumban és eltárolja a buttons objektum won kulcsú elemében
 }
 
-let isGameOver = false;                                 // a isGameOver változóba eltároljuk a false értéket, ami azt jelenti, hogy a játék még nem ért véget
-let isFirstClick = true;                                // a isFirstClick változóba eltároljuk a true értéket, ami azt jelenti, hogy még nem kattintottunk a pályára
-let exploredFields = 0;                                 // a exploredFields változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány mezőt fedtünk fel a pályán
+let isGameOver;                                       // a isGameOver változó azt tárolja, hogy a játék véget ért-e
+let isFirstClick;                                     // a isFirstClick változó azt tárolja, hogy az első kattintás megtörtént-e
+let exploredFields;                                   // a exploredFields változó azt tárolja, hogy hány mezőt fedtünk fel a pályán
+let map;                                              // a map változó azt tárolja, hogy a pálya milyen állapotban van 
+let exploredMap;                                      // a exploredMap változó azt tárolja, hogy fel volt-e fedve a mező
 
-let map = createMap();                                  // a map változóba eltároljuk a createMap függvény visszatérési értékét, ami a map tömböt adja vissza. A createMap függvény a játék térképét, megjelenését hozza létre. 
-let exploredMap = createExploredMap();                  // a exploredMap változóba eltároljuk a createExploredMap függvény visszatérési értékét, ami a exploredMap tömböt adja vissza. A már felfedett mezőket tárolja.
-
-         
-//console.log(map);                                        // kiírjuk a map tömböt a konzolra
+initGame();                                           // meghívjuk a initGame függvényt, amely inicializálja a játékot
 
 whenAllImagesLoaded(drawMap);                            // Amikor az összes kép betöltődött, meghívjuk a drawMap függvényt, hogy a képek frissítéskor mindig megjelenjenek a canvason. A whenAllImagesLoaded függvény megvárja, amíg az összes kép betöltődik, és csak utána hívja meg a paraméterként kapott másik függvényt. Az első paraméter a meghívandó függvény, a második paraméter a betöltési idő, ami 0-ról indul. 
 
-canvas.addEventListener('click', function(event) {          // a canvas változóhoz hozzáadunk egy click eseményfigyelőt, amelynek átadjuk az event paramétert. Így a canvasra kattintva lefut a függvény. 
-                                // meghívjuk a calculateFieldValues függvényt, amelynek átadjuk a map változó értékét. A calculateFieldValues függvény kiszámolja, hogy egy mező mellett hány akna van.
+canvas.addEventListener('click', function (event) {          // a canvas változóhoz hozzáadunk egy click eseményfigyelőt, amelynek átadjuk az event paramétert. Így a canvasra kattintva lefut a függvény. 
+  // meghívjuk a calculateFieldValues függvényt, amelynek átadjuk a map változó értékét. A calculateFieldValues függvény kiszámolja, hogy egy mező mellett hány akna van.
   if (isGameOver) return;                                   // a return kulcsszóval visszatérünk, és nem fut le a kód tovább
   const x = event.offsetX;                                  // az x változóba eltároljuk az event.offsetX értékét, ami a kattintás x koordinátája. Az event egy objektum, amely az esemény adatait tartalmazza. Az offsetX és offsetY az esemény x és y koordinátáit tartalmazza. 
   const y = event.offsetY;                                  // az y változóba eltároljuk az event.offsetY értékét, ami a kattintás y koordinátája
@@ -62,11 +62,25 @@ canvas.addEventListener('click', function(event) {          // a canvas változ�
   }
 });
 
-function exploreField(row, col) {                           // exploreField függvény, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
-  if (exploredMap[row][col] === false) {                    // if feltétel, amely akkor fut le, ha a exploredMap tömb row-edik és col-edik tömbjének valahányadik eleme false. A false azt jelenti, hogy a mezőt még nem fedtük fel.
-    exploredFields++;                                       // a exploredFields változó értékét növeljük eggyel
-    exploredMap[row][col] = true;                           // a exploredMap tömb row-edik és col-edik tömbjének valahányadik elemébe beírjuk a true értéket. A true azt jelenti, hogy a mezőt már felfedtük. 
-    if (map[row][col] === 0) {                              // if feltétel, amely akkor fut le, ha a map tömb row-edik és col-edik tömbjének valahányadik eleme 0. A 0 azt jelenti, hogy a mező mellett nincs akna.
+actionButton.addEventListener('click', function () {         // az actionButton változóhoz hozzáadunk egy click eseményfigyelőt, amelynek átadjuk az event paramétert. Így a gombra kattintva lefut a függvény.
+  initGame();                                                // meghívjuk a initGame függvényt, amely inicializálja a játékot
+});
+
+function initGame() {                                        // initGame függvény, amely inicializálja a játékot
+  isGameOver = false;                                        // a isGameOver változó értékét false-ra állítjuk, ami azt jelenti, hogy a játék még nem ért véget
+  isFirstClick = true;                                       // a isFirstClick változó értékét true-ra állítjuk, ami azt jelenti, hogy még nem kattintottunk a pályára
+  exploredFields = 0;                                        // a exploredFields változó értékét nullára állítjuk, ami azért kell, hogy tudjuk, hogy hány mezőt fedtünk fel a pályán
+  map = createMap();                                         // a map változóba eltároljuk a createMap függvény visszatérési értékét, ami a map tömböt adja vissza. A createMap függvény a játék térképét, megjelenését hozza létre.
+  exploredMap = createExploredMap();                         // a exploredMap változóba eltároljuk a createExploredMap függvény visszatérési értékét, ami a exploredMap tömböt adja vissza. A már felfedett mezőket tárolja.
+  drawMap();                                                 // meghívjuk a drawMap függvényt, amely a canvason jelenít meg képeket
+  actionButton.src = buttons.start;                          // az actionButton src-jébe beírjuk a buttons objektum start kulcsú elemének értékét, ami a start gomb képe. A nyerő gombot lecseréljük a mosolygós gombra
+}
+
+function exploreField(row, col) {                            // exploreField függvény, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
+  if (exploredMap[row][col] === false) {                     // if feltétel, amely akkor fut le, ha a exploredMap tömb row-edik és col-edik tömbjének valahányadik eleme false. A false azt jelenti, hogy a mezőt még nem fedtük fel.
+    exploredFields++;                                        // a exploredFields változó értékét növeljük eggyel
+    exploredMap[row][col] = true;                            // a exploredMap tömb row-edik és col-edik tömbjének valahányadik elemébe beírjuk a true értéket. A true azt jelenti, hogy a mezőt már felfedtük. 
+    if (map[row][col] === 0) {                               // if feltétel, amely akkor fut le, ha a map tömb row-edik és col-edik tömbjének valahányadik eleme 0. A 0 azt jelenti, hogy a mező mellett nincs akna.
       let neighbourCoordinates = findNeighbourFields(map, row, col);        // a neighbourCoordinates változóba eltároljuk a findNeighbourFields függvény visszatérési értékét, amelynek átadjuk a map, row (rowIndex röviden) és col (columnIndex röviden) változó értékét. A findNeighbourFields függvény megtalálja egy mező összes szomszédját. 
       for (let i = 0; i < neighbourCoordinates.length; i++) {               // for ciklus, amely a neighbourCoordinates tömb értékéig megy, ami nem más mint a neighbourCoordinates tömb, amelyet a findNeighbourFields függvény ad vissza. A neighbourCoordinates tömbben tároljuk el a szomszédos mezők sor- és oszlopindexeit. 
         let coordinate = neighbourCoordinates[i];                           // a coordinate változóba eltároljuk a neighbourCoordinates tömb i-edik, valahányadik elemét. A neighbourCoordinates tömbben tároljuk el a szomszédos mezők sor- és oszlopindexeit. 
@@ -75,7 +89,7 @@ function exploreField(row, col) {                           // exploreField füg
     }
   }
 }
-  
+
 
 function calculateFieldValues(map) {                     // calculateFieldValues függvény, amelynek átadjuk a map változó értékét. A calculateFieldValues függvény kiszámolja, hogy egy mező mellett hány akna van. 
   for (let rowI = 0; rowI < rows; rowI++) {              // for ciklus, amely a rows változó értékéig megy, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete
@@ -109,7 +123,7 @@ function findNeighbourFields(map, rowI, colI) {                    // findNeighb
     for (let col = colI - 1; col <= colI + 1; col++) {             // for ciklus, amely a colI változó értékéből kivon 1-et, és addig megy, amíg a colI változó értékéhez hozzáad 1-et, legenrálja az oszlopindexeket
       if (row >= 0 && row < rows && col >= 0 && col < columns) {   // if feltétel, amely akkor fut le, ha a row változó értéke nagyobb vagy egyenlő 0-val, és kisebb, mint a rows változó értéke, és a col változó értéke nagyobb vagy egyenlő 0-val, és kisebb, mint a columns változó értéke, magyarul a canvason kívül eső sorokat és oszlopokat nem veszi figyelembe
         if (row !== rowI || col !== colI) {                        // if feltétel, amely akkor fut le, ha a row változó értéke nem egyenlő a rowI változó értékével, vagy a col változó értéke nem egyenlő a colI változó értékével, magyarul a középső mezőt nem veszi figyelembe
-          neighbourCoordinates.push({row: row, col: col});         // a neighbourCoordinates tömbbe pusholjuk a row és col változó értékét, amelyek a for ciklusok változói
+          neighbourCoordinates.push({ row: row, col: col });         // a neighbourCoordinates tömbbe pusholjuk a row és col változó értékét, amelyek a for ciklusok változói
         }
       }
     }
@@ -118,52 +132,52 @@ function findNeighbourFields(map, rowI, colI) {                    // findNeighb
 }
 
 function placeMines(map, mineCount, startRow, startCol) {                         // placeMines függvény, amelynek átadjuk a map, mineCount, startRow és startCol változó értékét. A placeMines függvény elhelyezi a pályán az aknákat.
-   let mines = 0;                                                                 // a mines változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány akna van a pályán
-    while (mines < mineCount) {                                                   // while ciklus, amely addig fut, amíg a mines változó értéke kisebb, mint a mineCount változó értéke, ami 25
-        let x = Math.floor(Math.random() * columns);                              // a x változóba eltároljuk a Math.floor(Math.random() * columns) értékét, ami a Math.floor metódus a Math objektum egy metódusa, amely lefelé kerekíti a megadott számot, a Math.random metódus pedig a Math objektum egy metódusa, amely egy 0 és 1 közötti véletlen számot ad vissza, a columns változó pedig a canvas szélessége osztva a size változóval, ami a hidden kép mérete
-        let y = Math.floor(Math.random() * rows);                                 // a y változóba eltároljuk a Math.floor(Math.random() * rows) értékét, ami a Math.floor metódus a Math objektum egy metódusa, amely lefelé kerekíti a megadott számot, a Math.random metódus pedig a Math objektum egy metódusa, amely egy 0 és 1 közötti véletlen számot ad vissza, a rows változó pedig a canvas magassága osztva a size változóval, ami a hidden kép mérete
-        if (x !== startCol && y !== startRow && map[y][x] !== mine) {             // if feltétel, amely akkor fut le, ha a x változó értéke nem egyenlő a startCol változó értékével, és a y változó értéke nem egyenlő a startRow változó értékével, és a map tömb y-edik és x-edik tömbjének valahányadik eleme nem egyenlő a mine változó értékével, magyarul a középső mezőt nem veszi figyelembe
-            map[y][x] = mine;                                                     // a map tömb y-edik és x-edik tömbjének valahányadik elemébe beírjuk a mine változó értékét
-            mines++;                                                              // a mines változó értékét növeljük eggyel
-        }
+  let mines = 0;                                                                 // a mines változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány akna van a pályán
+  while (mines < mineCount) {                                                   // while ciklus, amely addig fut, amíg a mines változó értéke kisebb, mint a mineCount változó értéke, ami 25
+    let x = Math.floor(Math.random() * columns);                              // a x változóba eltároljuk a Math.floor(Math.random() * columns) értékét, ami a Math.floor metódus a Math objektum egy metódusa, amely lefelé kerekíti a megadott számot, a Math.random metódus pedig a Math objektum egy metódusa, amely egy 0 és 1 közötti véletlen számot ad vissza, a columns változó pedig a canvas szélessége osztva a size változóval, ami a hidden kép mérete
+    let y = Math.floor(Math.random() * rows);                                 // a y változóba eltároljuk a Math.floor(Math.random() * rows) értékét, ami a Math.floor metódus a Math objektum egy metódusa, amely lefelé kerekíti a megadott számot, a Math.random metódus pedig a Math objektum egy metódusa, amely egy 0 és 1 közötti véletlen számot ad vissza, a rows változó pedig a canvas magassága osztva a size változóval, ami a hidden kép mérete
+    if (x !== startCol && y !== startRow && map[y][x] !== mine) {             // if feltétel, amely akkor fut le, ha a x változó értéke nem egyenlő a startCol változó értékével, és a y változó értéke nem egyenlő a startRow változó értékével, és a map tömb y-edik és x-edik tömbjének valahányadik eleme nem egyenlő a mine változó értékével, magyarul a középső mezőt nem veszi figyelembe
+      map[y][x] = mine;                                                     // a map tömb y-edik és x-edik tömbjének valahányadik elemébe beírjuk a mine változó értékét
+      mines++;                                                              // a mines változó értékét növeljük eggyel
     }
+  }
 }
 
 
 function whenAllImagesLoaded(onAllImagesLoaded, loadTime = 0) {                          // Ez a függvény megvárja, amíg az összes kép betöltődik, és csak utána hívja meg a paraméterként kapott másik függvényt.
-                                                                                         // Az első paraméter a meghívandó függvény, a második paraméter a betöltési idő, ami 0-ról indul.
-    const imageCount = Object.values(images).length;                                     // az összes kép száma
-    let loadedImages = 0;                                                                // azoknak a képeknek a száma, amik már betöltődtek
-    for (let image of Object.values(images)) {                                           // végigmegyünk az összes képen
-      if (image.complete) {                                                              // ha a kép betöltődött
-        loadedImages++;                                                                  // növeljük a betöltött képek számát
-      }    
-    }
-                                                                                            
-    if (loadedImages < imageCount && loadTime < 3000) {                                  // ha még nem töltődött be minden kép, és még nem telt el 3 másodperc
-      console.log('Waiting for images to load');                                         // kiírjuk, hogy várunk a képekre
-      setTimeout(() => {                                                                 // 100ms múlva újra meghívjuk ezt a függvényt (rekurzió)
-        whenAllImagesLoaded(onAllImagesLoaded, loadTime + 100);                          // a betöltési időt 100ms-al növeljük
-      }, 100);
-    }
-    if (loadTime >= 3000) {                                                              // ha már eltelt 3 másodperc
-      console.log('Images could not be loaded');                                         // kiírjuk, hogy nem sikerült betölteni a képeket
-    } else if (imageCount === loadedImages) {                                            // különben ha minden kép betöltődött
-      onAllImagesLoaded();                                                               // meghívjuk a paraméterként kapott függvényt
+  // Az első paraméter a meghívandó függvény, a második paraméter a betöltési idő, ami 0-ról indul.
+  const imageCount = Object.values(images).length;                                     // az összes kép száma
+  let loadedImages = 0;                                                                // azoknak a képeknek a száma, amik már betöltődtek
+  for (let image of Object.values(images)) {                                           // végigmegyünk az összes képen
+    if (image.complete) {                                                              // ha a kép betöltődött
+      loadedImages++;                                                                  // növeljük a betöltött képek számát
     }
   }
 
+  if (loadedImages < imageCount && loadTime < 3000) {                                  // ha még nem töltődött be minden kép, és még nem telt el 3 másodperc
+    console.log('Waiting for images to load');                                         // kiírjuk, hogy várunk a képekre
+    setTimeout(() => {                                                                 // 100ms múlva újra meghívjuk ezt a függvényt (rekurzió)
+      whenAllImagesLoaded(onAllImagesLoaded, loadTime + 100);                          // a betöltési időt 100ms-al növeljük
+    }, 100);
+  }
+  if (loadTime >= 3000) {                                                              // ha már eltelt 3 másodperc
+    console.log('Images could not be loaded');                                         // kiírjuk, hogy nem sikerült betölteni a képeket
+  } else if (imageCount === loadedImages) {                                            // különben ha minden kép betöltődött
+    onAllImagesLoaded();                                                               // meghívjuk a paraméterként kapott függvényt
+  }
+}
+
 
 function createMap() {                                      // createMap függvény a játék téképét, megjelenését hozza létre
-    let map = [];                                           // a map tömböt létrehozzuk
-    for (let j = 0; j < rows; j++) {                        // for ciklus, amely a rows változó értékéig megy, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete
-        let row = [];                                       // a row tömböt létrehozzuk, amelyet a map tömbbe fogunk pusholni. A push metódus a tömb végére fűzi hozzá az elemet.
-        for (let i = 0; i < columns; i++) {                 // for ciklus, amely a columns változó értékéig megy, amely nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete.
-            row[i] = 0;                                     // a row tömb i-edik, valahányadik elemébe 0-t rakunk. Ezt azt eredményezi, hogy a row tömbbe annyi 0 kerül, ahány oszlop van a pályán. Jelen 
-        }                                                   // esetben 16, 12 sorban.
-        map[j] = row;                                       // a map tömbbe pusholjuk a row tömböt, amelynek az értékei 0-k. A map tömbbe annyi row tömb kerül, ahány sor van a pályán                                             
-    }
-    return map;                                             // visszatérünk a map tömbbel
+  let map = [];                                           // a map tömböt létrehozzuk
+  for (let j = 0; j < rows; j++) {                        // for ciklus, amely a rows változó értékéig megy, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete
+    let row = [];                                       // a row tömböt létrehozzuk, amelyet a map tömbbe fogunk pusholni. A push metódus a tömb végére fűzi hozzá az elemet.
+    for (let i = 0; i < columns; i++) {                 // for ciklus, amely a columns változó értékéig megy, amely nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete.
+      row[i] = 0;                                     // a row tömb i-edik, valahányadik elemébe 0-t rakunk. Ezt azt eredményezi, hogy a row tömbbe annyi 0 kerül, ahány oszlop van a pályán. Jelen 
+    }                                                   // esetben 16, 12 sorban.
+    map[j] = row;                                       // a map tömbbe pusholjuk a row tömböt, amelynek az értékei 0-k. A map tömbbe annyi row tömb kerül, ahány sor van a pályán                                             
+  }
+  return map;                                             // visszatérünk a map tömbbel
 }
 
 function createExploredMap() {                              // createExploredMap függvény a játék téképét, megjelenését hozza létre
@@ -176,7 +190,7 @@ function createExploredMap() {                              // createExploredMap
     exploredMap[j] = row;                                   // a exploredMap tömbbe pusholjuk a row tömböt, amelynek az értékei false-ok. A exploredMap tömbbe annyi row tömb kerül, ahány sor van a pályán                                             
   }
   return exploredMap;                                       // visszatérünk a exploredMap tömbbel
-}  
+}
 
 function drawMap() {                                        // drawMap függvény a canvason jelenít meg képeket
   for (let rowI = 0; rowI < rows; rowI++) {                 // for ciklus, amely a rows változó értékéig megy, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete
@@ -193,7 +207,7 @@ function drawMap() {                                        // drawMap függvén
 }
 
 function drawImage(image, x, y) {                           // drawImage függvény, amelynek átadjuk az image, x és y változó értékét. A drawImage függvény a canvason jelenít meg képeket.
-    c.drawImage(image, x, y, size, size);                   // a canvas contextjének drawImage metódusával kirajzoljuk az image képet a megadott x és y koordinátákra, a size változóval meghatározott méretben
+  c.drawImage(image, x, y, size, size);                   // a canvas contextjének drawImage metódusával kirajzoljuk az image képet a megadott x és y koordinátákra, a size változóval meghatározott méretben
 }
 
 // a const változók értékét nem lehet megváltoztatni, a let változók értékét lehet megváltoztatni, var változó használata nem ajánlott, mert globális változóvá válik, amelyet bárhol meg lehet változtatni
