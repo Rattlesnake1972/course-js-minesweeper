@@ -1,12 +1,12 @@
-const canvas = document.getElementById('myCanvas');                                   // a myCanvas id-jű canvas elemet eltároljuk a canvas változóban. A document objektum egy metódusa a getElementById, amely visszaadja a megadott id-jű elemet, amelyet a canvas változóban tárolunk el. A getElementById metódusnak egy paramétere van, amely a keresett elem id-je. A canvas egy HTML elem, amelyet a HTML dokumentumban a <canvas> taggel hozunk létre. A canvas egy olyan elem, amelyen rajzolni lehet. A canvas egy objektum, amelynek van egy getContext metódusa, amely visszaadja a canvas contextjét, amelyet a c változóban tárolunk el. A canvas contextje a rajzolás alapvető eszköze, amely lehetővé teszi a rajzolást a canvason. A getContext metódusnak egy paramétere van, amely a context típusát határozza meg. A 2d a 2 dimenziós rajzolást jelenti, ami a leggyakrabban használt.
+const canvas = document.getElementById('myCanvas');                                  // a myCanvas id-jű canvas elemet eltároljuk a canvas változóban. A document objektum egy metódusa a getElementById, amely visszaadja a megadott id-jű elemet, amelyet a canvas változóban tárolunk el. A getElementById metódusnak egy paramétere van, amely a keresett elem id-je. A canvas egy HTML elem, amelyet a HTML dokumentumban a <canvas> taggel hozunk létre. A canvas egy olyan elem, amelyen rajzolni lehet. A canvas egy objektum, amelynek van egy getContext metódusa, amely visszaadja a canvas contextjét, amelyet a c változóban tárolunk el. A canvas contextje a rajzolás alapvető eszköze, amely lehetővé teszi a rajzolást a canvason. A getContext metódusnak egy paramétere van, amely a context típusát határozza meg. A 2d a 2 dimenziós rajzolást jelenti, ami a leggyakrabban használt.
 const c = canvas.getContext('2d');                                                   // a canvas változó contextjét eltároljuk a c változóban. A context a rajzolás alapvető eszköze, amely lehetővé teszi a rajzolást a canvason. A getContext metódus a canvas objektum egy metódusa, amely visszaadja a canvas contextjét, amelyet a c változóban tárolunk el. A getContext metódusnak egy paramétere van, amely a context típusát határozza meg. A 2d a 2 dimenziós rajzolást jelenti, ami a leggyakrabban használt. 
-const actionButton = document.getElementById('action-button');                      // az action id-jű gombot eltároljuk az actionButton változóban. A document objektum egy metódusa a getElementById, amely visszaadja a megadott id-jű elemet, amelyet az actionButton változóban tárolunk el. A getElementById metódusnak egy paramétere van, amely a keresett elem id-je. A gomb egy HTML elem, amelyet a HTML dokumentumban a <button> taggel hozunk létre. A gomb egy olyan elem, amelyre kattintva lefut egy függvény.
+const actionButton = document.getElementById('action-button');                       // az action id-jű gombot eltároljuk az actionButton változóban. A document objektum egy metódusa a getElementById, amely visszaadja a megadott id-jű elemet, amelyet az actionButton változóban tárolunk el. A getElementById metódusnak egy paramétere van, amely a keresett elem id-je. A gomb egy HTML elem, amelyet a HTML dokumentumban a <button> taggel hozunk létre. A gomb egy olyan elem, amelyre kattintva lefut egy függvény.
 
 const size = 50;                                        // a size változóba eltároljuk a 50 értéket. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
 const columns = canvas.width / size;                    // a columns változóba eltároljuk a canvas szélességét osztva a size változóval. A canvas a képernyőn megjelenő terület, amelyen rajzolunk. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
 const rows = canvas.height / size;                      // a rows változóba eltároljuk a canvas magasságát osztva a size változóval 
 const mine = 'mine';                                    // a mine változóba eltároljuk a mine stringet 
-const mineCount = 10;                                   // a mineCount változóba eltároljuk az 30 értéket, azaz 30 db akna lesz a pályán
+const mineCount = 20;                                   // a mineCount változóba eltároljuk az 20 értéket, azaz 20 db akna lesz a pályán
 const images = {
   'hidden': document.getElementById('hidden'),        // a hidden id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
   'mine': document.getElementById('mine'),            // a mine id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
@@ -33,13 +33,13 @@ const buttons = {
 let isGameOver;                                       // a isGameOver változó azt tárolja, hogy a játék véget ért-e
 let isFirstClick;                                     // a isFirstClick változó azt tárolja, hogy az első kattintás megtörtént-e
 let exploredFields;                                   // a exploredFields változó azt tárolja, hogy hány mezőt fedtünk fel a pályán
-let flaggedMap;                                    // a flaggedFields változó azt tárolja, hogy hány mezőt jelöltünk meg a pályán zászlóval
+let flaggedMap;                                       // a flaggedFields változó azt tárolja, hogy hány mezőt jelöltünk meg a pályán zászlóval
 let map;                                              // a map változó azt tárolja, hogy a pálya milyen állapotban van 
 let exploredMap;                                      // a exploredMap változó azt tárolja, hogy fel volt-e fedve a mező
 
 initGame();                                           // meghívjuk a initGame függvényt, amely inicializálja a játékot
 
-whenAllImagesLoaded(drawMap);                            // Amikor az összes kép betöltődött, meghívjuk a drawMap függvényt, hogy a képek frissítéskor mindig megjelenjenek a canvason. A whenAllImagesLoaded függvény megvárja, amíg az összes kép betöltődik, és csak utána hívja meg a paraméterként kapott másik függvényt. Az első paraméter a meghívandó függvény, a második paraméter a betöltési idő, ami 0-ról indul. 
+whenAllImagesLoaded(drawMap);                         // Amikor az összes kép betöltődött, meghívjuk a drawMap függvényt, hogy a képek frissítéskor mindig megjelenjenek a canvason. A whenAllImagesLoaded függvény megvárja, amíg az összes kép betöltődik, és csak utána hívja meg a paraméterként kapott másik függvényt. Az első paraméter a meghívandó függvény, a második paraméter a betöltési idő, ami 0-ról indul. 
 
 canvas.addEventListener('click', function (event) {         // a canvas változóhoz hozzáadunk egy click eseményfigyelőt, amelynek átadjuk az event paramétert. Így a canvasra kattintva lefut a függvény. 
   // meghívjuk a calculateFieldValues függvényt, amelynek átadjuk a map változó értékét. A calculateFieldValues függvény kiszámolja, hogy egy mező mellett hány akna van.
@@ -137,7 +137,7 @@ function findNeighbourFields(map, rowI, colI) {                    // findNeighb
     for (let col = colI - 1; col <= colI + 1; col++) {             // for ciklus, amely a colI változó értékéből kivon 1-et, és addig megy, amíg a colI változó értékéhez hozzáad 1-et, legenrálja az oszlopindexeket
       if (row >= 0 && row < rows && col >= 0 && col < columns) {   // if feltétel, amely akkor fut le, ha a row változó értéke nagyobb vagy egyenlő 0-val, és kisebb, mint a rows változó értéke, és a col változó értéke nagyobb vagy egyenlő 0-val, és kisebb, mint a columns változó értéke, magyarul a canvason kívül eső sorokat és oszlopokat nem veszi figyelembe
         if (row !== rowI || col !== colI) {                        // if feltétel, amely akkor fut le, ha a row változó értéke nem egyenlő a rowI változó értékével, vagy a col változó értéke nem egyenlő a colI változó értékével, magyarul a középső mezőt nem veszi figyelembe
-          neighbourCoordinates.push({ row: row, col: col });         // a neighbourCoordinates tömbbe pusholjuk a row és col változó értékét, amelyek a for ciklusok változói
+          neighbourCoordinates.push({ row: row, col: col });       // a neighbourCoordinates tömbbe pusholjuk a row és col változó értékét, amelyek a for ciklusok változói
         }
       }
     }
@@ -145,20 +145,20 @@ function findNeighbourFields(map, rowI, colI) {                    // findNeighb
   return neighbourCoordinates;                                  // visszatérünk a neighbourCoordinates tömbbel. A neighbourCoordinates tömbben tároljuk el a szomszédos mezők sor- és oszlopindexeit.
 }
 
-function placeMines(map, mineCount, startRow, startCol) {                         // placeMines függvény, amelynek átadjuk a map, mineCount, startRow és startCol változó értékét. A placeMines függvény elhelyezi a pályán az aknákat.
-  let mines = 0;                                                                 // a mines változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány akna van a pályán
-  while (mines < mineCount) {                                                   // while ciklus, amely addig fut, amíg a mines változó értéke kisebb, mint a mineCount változó értéke, ami 25
+function placeMines(map, mineCount, startRow, startCol) {                     // placeMines függvény, amelynek átadjuk a map, mineCount, startRow és startCol változó értékét. A placeMines függvény elhelyezi a pályán az aknákat.
+  let mines = 0;                                                              // a mines változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány akna van a pályán
+  while (mines < mineCount) {                                                 // while ciklus, amely addig fut, amíg a mines változó értéke kisebb, mint a mineCount változó értéke, ami 25
     let x = Math.floor(Math.random() * columns);                              // a x változóba eltároljuk a Math.floor(Math.random() * columns) értékét, ami a Math.floor metódus a Math objektum egy metódusa, amely lefelé kerekíti a megadott számot, a Math.random metódus pedig a Math objektum egy metódusa, amely egy 0 és 1 közötti véletlen számot ad vissza, a columns változó pedig a canvas szélessége osztva a size változóval, ami a hidden kép mérete
     let y = Math.floor(Math.random() * rows);                                 // a y változóba eltároljuk a Math.floor(Math.random() * rows) értékét, ami a Math.floor metódus a Math objektum egy metódusa, amely lefelé kerekíti a megadott számot, a Math.random metódus pedig a Math objektum egy metódusa, amely egy 0 és 1 közötti véletlen számot ad vissza, a rows változó pedig a canvas magassága osztva a size változóval, ami a hidden kép mérete
     if (x !== startCol && y !== startRow && map[y][x] !== mine) {             // if feltétel, amely akkor fut le, ha a x változó értéke nem egyenlő a startCol változó értékével, és a y változó értéke nem egyenlő a startRow változó értékével, és a map tömb y-edik és x-edik tömbjének valahányadik eleme nem egyenlő a mine változó értékével, magyarul a középső mezőt nem veszi figyelembe
-      map[y][x] = mine;                                                     // a map tömb y-edik és x-edik tömbjének valahányadik elemébe beírjuk a mine változó értékét
-      mines++;                                                              // a mines változó értékét növeljük eggyel
+      map[y][x] = mine;                                                       // a map tömb y-edik és x-edik tömbjének valahányadik elemébe beírjuk a mine változó értékét
+      mines++;                                                                // a mines változó értékét növeljük eggyel
     }
   }
 }
 
 
-function whenAllImagesLoaded(onAllImagesLoaded, loadTime = 0) {                          // Ez a függvény megvárja, amíg az összes kép betöltődik, és csak utána hívja meg a paraméterként kapott másik függvényt.
+function whenAllImagesLoaded(onAllImagesLoaded, loadTime = 0) {                        // Ez a függvény megvárja, amíg az összes kép betöltődik, és csak utána hívja meg a paraméterként kapott másik függvényt.
   // Az első paraméter a meghívandó függvény, a második paraméter a betöltési idő, ami 0-ról indul.
   const imageCount = Object.values(images).length;                                     // az összes kép száma
   let loadedImages = 0;                                                                // azoknak a képeknek a száma, amik már betöltődtek
