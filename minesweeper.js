@@ -1,6 +1,7 @@
 const canvas = document.getElementById('myCanvas');                                  // a myCanvas id-jű canvas elemet eltároljuk a canvas változóban. A document objektum egy metódusa a getElementById, amely visszaadja a megadott id-jű elemet, amelyet a canvas változóban tárolunk el. A getElementById metódusnak egy paramétere van, amely a keresett elem id-je. A canvas egy HTML elem, amelyet a HTML dokumentumban a <canvas> taggel hozunk létre. A canvas egy olyan elem, amelyen rajzolni lehet. A canvas egy objektum, amelynek van egy getContext metódusa, amely visszaadja a canvas contextjét, amelyet a c változóban tárolunk el. A canvas contextje a rajzolás alapvető eszköze, amely lehetővé teszi a rajzolást a canvason. A getContext metódusnak egy paramétere van, amely a context típusát határozza meg. A 2d a 2 dimenziós rajzolást jelenti, ami a leggyakrabban használt.
 const c = canvas.getContext('2d');                                                   // a canvas változó contextjét eltároljuk a c változóban. A context a rajzolás alapvető eszköze, amely lehetővé teszi a rajzolást a canvason. A getContext metódus a canvas objektum egy metódusa, amely visszaadja a canvas contextjét, amelyet a c változóban tárolunk el. A getContext metódusnak egy paramétere van, amely a context típusát határozza meg. A 2d a 2 dimenziós rajzolást jelenti, ami a leggyakrabban használt. 
 const actionButton = document.getElementById('action-button');                       // az action id-jű gombot eltároljuk az actionButton változóban. A document objektum egy metódusa a getElementById, amely visszaadja a megadott id-jű elemet, amelyet az actionButton változóban tárolunk el. A getElementById metódusnak egy paramétere van, amely a keresett elem id-je. A gomb egy HTML elem, amelyet a HTML dokumentumban a <button> taggel hozunk létre. A gomb egy olyan elem, amelyre kattintva lefut egy függvény.
+const mineCounter = document.getElementById('mine-count');                           // a mine-counter id-jű span elemet eltároljuk a mineCounter változóban. A document objektum egy metódusa a getElementById, amely visszaadja a megadott id-jű elemet, amelyet a mineCounter változóban tárolunk el. A getElementById metódusnak egy paramétere van, amely a keresett elem id-je. A span egy HTML elem, amelyet a HTML dokumentumban a <span> taggel hozunk létre. A span egy olyan elem, amely a szöveg egy részét jelöli. A span elemet a mineCounter változóban tároljuk el.
 
 const size = 50;                                        // a size változóba eltároljuk a 50 értéket. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
 const columns = canvas.width / size;                    // a columns változóba eltároljuk a canvas szélességét osztva a size változóval. A canvas a képernyőn megjelenő terület, amelyen rajzolunk. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
@@ -36,6 +37,7 @@ let exploredFields;                                   // a exploredFields válto
 let flaggedMap;                                       // a flaggedFields változó azt tárolja, hogy hány mezőt jelöltünk meg a pályán zászlóval
 let map;                                              // a map változó azt tárolja, hogy a pálya milyen állapotban van 
 let exploredMap;                                      // a exploredMap változó azt tárolja, hogy fel volt-e fedve a mező
+let remainingMines;                                   // a remainingMines változó azt tárolja, hogy hány akna van még a pályán
 
 initGame();                                           // meghívjuk a initGame függvényt, amely inicializálja a játékot
 
@@ -72,7 +74,9 @@ canvas.addEventListener('contextmenu', function (event) {    // a canvas változ
   const row = Math.floor(y / size);                          // a row változóba eltároljuk a y változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
   if(exploredMap[row][col]) return;                          // if feltétel, amely akkor fut le, ha a exploredMap tömb row-edik és col-edik tömbjének valahányadik eleme true. A true azt jelenti, hogy a mezőt már felfedtük. Ha a feltétel teljesül, akkor nem történik semmi.
   flagMap[row][col] = !flagMap[row][col];                    // a flagMap tömb row-edik és col-edik tömbjének valahányadik elemébe beírjuk a !flagMap[row][col] értékét. A !flagMap[row][col] azt jelenti, hogy a flagMap tömb row-edik és col-edik tömbjének valahányadik eleme negáltja. A flagMap tömbben tároljuk el, hogy melyik mezőt jelöltük meg zászlóval.
+  remainingMines += flagMap[row][col] ? -1 : 1;              // a remainingMines változó értékéhez hozzáadjuk a flagMap tömb row-edik és col-edik tömbjének valahányadik elemét. A flagMap tömbben tároljuk el, hogy melyik mezőt jelöltük meg zászlóval. Ha a flagMap tömb row-edik és col-edik tömbjének valahányadik eleme true, akkor a remainingMines változó értékéből kivonunk 1-et, ha false, akkor pedig hozzáadunk 1-et. A remainingMines változó értéke azoknak a mezőknek száma, amelyek még nem voltak felfedve, és amelyekre még nem tettünk zászlót. Ternary operator a ? és : karakterek közötti kifejezés, amely akkor fut le, ha a ? előtti kifejezés igaz, és akkor fut le, ha a : utáni kifejezés igaz. A ternary operator egy rövidített if-else szerkezet, amelynek 3 operandusa van. 
   drawMap();                                                 // meghívjuk a drawMap függvényt, amely a canvason jelenít meg képeket
+  mineCounter.innerText = convertNumberTo3DigitString(remainingMines);   // a mineCounter innerText-jébe beírjuk a convertNumberTo3DigitString függvény visszatérési értékét, amelynek átadjuk a remainingMines változó értékét. A convertNumberTo3DigitString függvény a számot 3 számjegyű stringgé alakítja. A remainingMines változó értéke azoknak a mezőknek száma, amelyek még nem voltak felfedve, és amelyekre még nem tettünk zászlót. Ez azért fontos, hogy működjön a zászlózás, mert a zászlózásnál a remainingMines változó értékét növelni vagy csökkenteni kell.
 });
 
 actionButton.addEventListener('click', function () {         // az actionButton változóhoz hozzáadunk egy click eseményfigyelőt, amelynek átadjuk az event paramétert. Így a gombra kattintva lefut a függvény.
@@ -88,6 +92,8 @@ function initGame() {                                        // initGame függv�
   flagMap = createBooleanMap();                              // a flagMap változóba eltároljuk a createBooleanMap függvény visszatérési értékét, ami a flagMap tömböt adja vissza. A flagMap tömbben tároljuk el, hogy melyik mezőt jelöltük meg zászlóval.
   drawMap();                                                 // meghívjuk a drawMap függvényt, amely a canvason jelenít meg képeket
   actionButton.src = buttons.start;                          // az actionButton src-jébe beírjuk a buttons objektum start kulcsú elemének értékét, ami a start gomb képe. A nyerő gombot lecseréljük a mosolygós gombra
+  remainingMines = mineCount;                                // a remainingMines változó értékét beállítjuk a mineCount változó értékére, ami az aknák számát jelöli. A remainingMines változó értéke azoknak a mezőknek száma, amelyek még nem voltak felfedve, és amelyekre még nem tettünk zászlót.
+  mineCounter.innerText = convertNumberTo3DigitString(remainingMines);   // a mineCounter innerText-jébe beírjuk a convertNumberTo3DigitString függvény visszatérési értékét, amelynek átadjuk a remainingMines változó értékét. A convertNumberTo3DigitString függvény a számot 3 számjegyű stringgé alakítja. A remainingMines változó értéke azoknak a mezőknek száma, amelyek még nem voltak felfedve, és amelyekre még nem tettünk zászlót. 
 }
 
 function exploreField(row, col) {                            // exploreField függvény, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
@@ -225,6 +231,18 @@ function drawMap() {                                        // drawMap függvén
 
 function drawImage(image, x, y) {                         // drawImage függvény, amelynek átadjuk az image, x és y változó értékét. A drawImage függvény a canvason jelenít meg képeket.
   c.drawImage(image, x, y, size, size);                   // a canvas contextjének drawImage metódusával kirajzoljuk az image képet a megadott x és y koordinátákra, a size változóval meghatározott méretben
+}
+
+function convertNumberTo3DigitString(number) {            // convertNumberTo3DigitString függvény, amelynek átadjuk a number változó értékét. A convertNumberTo3DigitString függvény átalakítja a számot 3 karakteres szöveggé.
+  if (number < 0) {                                       // if feltétel, amely akkor fut le, ha a number változó értéke kisebb, mint 0
+    return '🤡';                                         // visszatérünk a 'bohóc emoji' értékével
+  } else if (number < 20) {                              // if feltétel, amely akkor fut le, ha a number változó értéke kisebb, mint 20
+    return '00' + number;                                // visszatérünk a '00' + number értékével
+  } else if (number < 100) {                             // else if feltétel, amely akkor fut le, ha a number változó értéke kisebb, mint 100
+    return '0' + number;                                 // visszatérünk a '0' + number értékével
+  } else {                                               // különben
+    return number;                                       // visszatérünk a number értékével
+  }
 }
 
 // a const változók értékét nem lehet megváltoztatni, a let változók értékét lehet megváltoztatni, var változó használata nem ajánlott, mert globális változóvá válik, amelyet bárhol meg lehet változtatni
