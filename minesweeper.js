@@ -9,18 +9,19 @@ const rows = canvas.height / size;                      // a rows változóba el
 const mine = 'mine';                                    // a mine változóba eltároljuk a mine stringet 
 const mineCount = 20;                                   // a mineCount változóba eltároljuk az 20 értéket, azaz 20 db akna lesz a pályán
 const images = {
-  'hidden': document.getElementById('hidden'),        // a hidden id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-  'mine': document.getElementById('mine'),            // a mine id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-  'flag': document.getElementById('flag'),            // a flag id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-  '0': document.getElementById('field-0'),            // a field-0 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-  '1': document.getElementById('field-1'),            // a field-1 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-  '2': document.getElementById('field-2'),            // a field-2 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-  '3': document.getElementById('field-3'),            // a field-3 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-  '4': document.getElementById('field-4'),            // a field-4 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-  '5': document.getElementById('field-5'),            // a field-5 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-  '6': document.getElementById('field-6'),            // a field-6 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-  '7': document.getElementById('field-7'),            // a field-7 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
-  '8': document.getElementById('field-8'),            // a field-8 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  'hidden': document.getElementById('hidden'),               // a hidden id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  'mine': document.getElementById('exploded-mine'),          // az exploded-mine id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk, ez a felrobbant akna képe
+  'flag': document.getElementById('flag'),                   // a flag id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  'flaggedWrong': document.getElementById('flagged-wrong'),  // a flagged-wrong id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk, ez a rosszul jelölt mező képe
+  '0': document.getElementById('field-0'),                   // a field-0 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '1': document.getElementById('field-1'),                   // a field-1 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '2': document.getElementById('field-2'),                   // a field-2 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '3': document.getElementById('field-3'),                   // a field-3 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '4': document.getElementById('field-4'),                   // a field-4 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '5': document.getElementById('field-5'),                   // a field-5 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '6': document.getElementById('field-6'),                   // a field-6 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '7': document.getElementById('field-7'),                   // a field-7 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
+  '8': document.getElementById('field-8'),                   // a field-8 id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
 };
 
 
@@ -58,8 +59,7 @@ canvas.addEventListener('click', function (event) {         // a canvas változ�
   exploreField(row, col);                                   // meghívjuk a exploreField függvényt, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
   drawMap();                                                // meghívjuk a drawMap függvényt, amely a canvason jelenít meg képeket
   if (map[row][col] === mine) {                             // if feltétel, amely akkor fut le, ha a map tömb row-edik és col-edik tömbjének valahányadik eleme egyenlő a mine változó értékével
-    isGameOver = true;                                      // a isGameOver változó értékét true-ra állítjuk, ami azt jelenti, hogy a játék véget ért
-    actionButton.src = buttons.lost;                        // az actionButton src-jébe beírjuk a buttons objektum lost kulcsú elemének értékét, ami a lost gomb képe. A mosolygós gombot lecseréljük a szomorú gombra 
+    looseGame();                                            // meghívjuk a looseGame függvényt, amely azt jrlzi, hogy a játékot elvesztettük 
   } else if (exploredFields === (rows * columns) - mineCount) {   // else if feltétel, amely akkor fut le, ha a exploredFields változó értéke egyenlő a rows és columns változók szorzatából kivonva a mineCount változó értékét. A rows változó értéke nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete, a columns változó értéke nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete. A exploredFields változó értéke pedig az a mezők száma, amelyeket már felfedtünk. Ha a feltétel teljesül, akkor a játékos nyert.
     isGameOver = true;                                      // a isGameOver változó értékét true-ra állítjuk, ami azt jelenti, hogy a játék véget ért
     actionButton.src = buttons.won;                         // az actionButton src-jébe beírjuk a buttons objektum won kulcsú elemének értékét, ami a won gomb képe. A mosolygós gombot lecseréljük a nyerő gombra
@@ -95,6 +95,19 @@ function initGame() {                                        // initGame függv�
   remainingMines = mineCount;                                // a remainingMines változó értékét beállítjuk a mineCount változó értékére, ami az aknák számát jelöli. A remainingMines változó értéke azoknak a mezőknek száma, amelyek még nem voltak felfedve, és amelyekre még nem tettünk zászlót.
   mineCounter.innerText = convertNumberTo3DigitString(remainingMines);   // a mineCounter innerText-jébe beírjuk a convertNumberTo3DigitString függvény visszatérési értékét, amelynek átadjuk a remainingMines változó értékét. A convertNumberTo3DigitString függvény a számot 3 számjegyű stringgé alakítja. A remainingMines változó értéke azoknak a mezőknek száma, amelyek még nem voltak felfedve, és amelyekre még nem tettünk zászlót. 
 }
+
+function looseGame() {                                       // looseGame függvény, amely azt jelzi, hogy a játékot elvesztettük
+  isGameOver = true;                                         // a isGameOver változó értékét true-ra állítjuk, ami azt jelenti, hogy a játék véget ért
+  actionButton.src = buttons.lost;                           // az actionButton src-jébe beírjuk a buttons objektum lost kulcsú elemének értékét, ami a lost gomb képe. A mosolygós gombot lecseréljük a vesztett gombra
+  for (let rowI = 0; rowI < rows; rowI++) {                  // for ciklus, amely a rows változó értékéig megy, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete
+    for (let colI = 0; colI < columns; colI++) {             // for ciklus, amely a columns változó értékéig megy, ami nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete
+      if (flagMap[rowI][colI] && map[rowI][colI] !== mine) {       // if feltétel, amely akkor fut le, ha a flagMap tömb rowI-edik és colI-edik tömbjének valahányadik eleme true és a map tömb rowI-edik és colI-edik tömbjének valahányadik eleme nem egyenlő a mine változó értékével. A flagMap tömbben tároljuk el, hogy melyik mezőt jelöltük meg zászlóval. A map tömbben tároljuk el, hogy a pálya milyen állapotban van. Ha a feltétel teljesül, akkor a játékos rosszul jelölt meg egy mezőt zászlóval.
+        drawImage(images.flaggedWrong, colI * size, rowI * size);  // meghívjuk a drawImage függvényt, amelynek átadjuk az images.flaggedWrong, colI * size és rowI * size változó értékét. A drawImage függvény a canvason jelenít meg képeket. A images.flaggedWrong az a kép, amelyet a canvas contextjének drawImage metódusában használunk, ez a rosszul jelölt mező képe. A colI * size és rowI * size változó értéke a kép x és y koordinátája.
+      }
+    }
+  }
+
+}  
 
 function exploreField(row, col) {                            // exploreField függvény, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
   if (exploredMap[row][col] === false) {                     // if feltétel, amely akkor fut le, ha a exploredMap tömb row-edik és col-edik tömbjének valahányadik eleme false. A false azt jelenti, hogy a mezőt még nem fedtük fel.
