@@ -36,7 +36,7 @@ const buttons = {
 let isGameOver;                                       // a isGameOver változó azt tárolja, hogy a játék véget ért-e
 let isFirstClick;                                     // a isFirstClick változó azt tárolja, hogy az első kattintás megtörtént-e
 let exploredFields;                                   // a exploredFields változó azt tárolja, hogy hány mezőt fedtünk fel a pályán
-let flaggedMap;                                       // a flaggedFields változó azt tárolja, hogy hány mezőt jelöltünk meg a pályán zászlóval
+let flagMap;                                          // a flagMap változó azt tárolja, hogy melyik mezőt jelöltük meg zászlóval
 let map;                                              // a map változó azt tárolja, hogy a pálya milyen állapotban van 
 let exploredMap;                                      // a exploredMap változó azt tárolja, hogy fel volt-e fedve a mező
 let remainingMines;                                   // a remainingMines változó azt tárolja, hogy hány akna van még a pályán
@@ -61,15 +61,10 @@ canvas.addEventListener('click', function (event) {         // a canvas változ�
   }
   exploreField(row, col);                                   // meghívjuk a exploreField függvényt, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
   drawMap();                                                // meghívjuk a drawMap függvényt, amely a canvason jelenít meg képeket
-  if (map[row][col] === mine && exploredMap[row][col]) {    // if feltétel, amely akkor fut le, ha a map tömb row-edik és col-edik tömbjének valahányadik eleme egyenlő a mine változó értékével és a exploredMap tömb row-edik és col-edik tömbjének valahányadik eleme true. A true azt jelenti, hogy a mezőt már felfedtük. A map tömbben tároljuk el, hogy a pálya milyen állapotban van. A exploredMap tömbben tároljuk el, hogy fel volt-e fedve a mező. Ha a feltétel teljesül, akkor a játékos robbanós mezőre kattintott.
-    looseGame();                                            // meghívjuk a looseGame függvényt, amely azt jrlzi, hogy a játékot elvesztettük
-    stopTimer();                                            // meghívjuk a stopTimer függvényt, amely leállítja az időmérőt 
-  } else if (exploredFields === (rows * columns) - mineCount) {   // else if feltétel, amely akkor fut le, ha a exploredFields változó értéke egyenlő a rows és columns változók szorzatából kivonva a mineCount változó értékét. A rows változó értéke nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete, a columns változó értéke nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete. A exploredFields változó értéke pedig az a mezők száma, amelyeket már felfedtünk. Ha a feltétel teljesül, akkor a játékos nyert.
-    isGameOver = true;                                      // a isGameOver változó értékét true-ra állítjuk, ami azt jelenti, hogy a játék véget ért
-    actionButton.src = buttons.won;                         // az actionButton src-jébe beírjuk a buttons objektum won kulcsú elemének értékét, ami a won gomb képe. A mosolygós gombot lecseréljük a nyerő gombra
-    stopTimer();                                            // meghívjuk a stopTimer függvényt, amely leállítja az időmérőt
-  }
+  checkGameEnd(row, col);                                   // meghívjuk a checkGameEnd függvényt, amelynek átadjuk a row és col változó értékét. A checkGameEnd függvény ellenőrzi, hogy a játék véget ért-e.
 });
+
+
 
 canvas.addEventListener('contextmenu', function (event) {    // a canvas változóhoz hozzáadunk egy contextmenu eseményfigyelőt, amelynek átadjuk az event paramétert. Így a canvasra jobb klikkelve lefut a függvény.
   event.preventDefault();                                    // megakadályozzuk, hogy a böngésző megjelenítse a az alapértelmezett jobb klikk menüt
@@ -77,11 +72,24 @@ canvas.addEventListener('contextmenu', function (event) {    // a canvas változ
   const y = event.offsetY;                                   // az y változóba eltároljuk az event.offsetY értékét, ami a kattintás y koordinátája
   const col = Math.floor(x / size);                          // a col változóba eltároljuk a x változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
   const row = Math.floor(y / size);                          // a row változóba eltároljuk a y változó értékét osztva a size változóval, ami a hidden kép mérete, és lefelé kerekítjük
-  if(exploredMap[row][col]) return;                          // if feltétel, amely akkor fut le, ha a exploredMap tömb row-edik és col-edik tömbjének valahányadik eleme true. A true azt jelenti, hogy a mezőt már felfedtük. Ha a feltétel teljesül, akkor nem történik semmi.
-  flagMap[row][col] = !flagMap[row][col];                    // a flagMap tömb row-edik és col-edik tömbjének valahányadik elemébe beírjuk a !flagMap[row][col] értékét. A !flagMap[row][col] azt jelenti, hogy a flagMap tömb row-edik és col-edik tömbjének valahányadik eleme negáltja. A flagMap tömbben tároljuk el, hogy melyik mezőt jelöltük meg zászlóval.
-  remainingMines += flagMap[row][col] ? -1 : 1;              // a remainingMines változó értékéhez hozzáadjuk a flagMap tömb row-edik és col-edik tömbjének valahányadik elemét. A flagMap tömbben tároljuk el, hogy melyik mezőt jelöltük meg zászlóval. Ha a flagMap tömb row-edik és col-edik tömbjének valahányadik eleme true, akkor a remainingMines változó értékéből kivonunk 1-et, ha false, akkor pedig hozzáadunk 1-et. A remainingMines változó értéke azoknak a mezőknek száma, amelyek még nem voltak felfedve, és amelyekre még nem tettünk zászlót. Ternary operator a ? és : karakterek közötti kifejezés, amely akkor fut le, ha a ? előtti kifejezés igaz, és akkor fut le, ha a : utáni kifejezés igaz. A ternary operator egy rövidített if-else szerkezet, amelynek 3 operandusa van. 
+  if(exploredMap[row][col]) {
+    const neighbourCoordinates = findNeighbourFields(map, row, col);   // a neighbourCoordinates változóba eltároljuk a findNeighbourFields függvény visszatérési értékét, amelynek átadjuk a map, row és col változó értékét. A findNeighbourFields függvény visszatérési értéke a szomszédos mezők koordinátáit tartalmazó tömb.
+    let flaggedNeighbours = countFlaggedNeighbours(neighbourCoordinates);   // a flaggedNeighbours változóba eltároljuk a countFlaggedNeighbours függvény visszatérési értékét, amelynek átadjuk a neighbourCoordinates változó értékét. A countFlaggedNeighbours függvény visszatérési értéke a szomszédos mezők közül hányat jelöltünk meg zászlóval.
+    if (flaggedNeighbours === map[row][col]) {               // if feltétel, amely akkor fut le, ha a flaggedNeighbours változó értéke egyenlő a map tömb row-edik és col-edik tömbjének valahányadik elemével. A flaggedNeighbours változó értéke a szomszédos mezők közül hányat jelöltünk meg zászlóval. A map tömbben tároljuk el, hogy a pálya milyen állapotban van. Ha a feltétel teljesül, akkor a játékos nyert.
+      for (let i = 0; i < neighbourCoordinates.length; i++) {   // for ciklus, amely addig fut, amíg a i kisebb, mint a neighbourCoordinates tömb hossza, és minden körben növeli a i értékét eggyel
+        let coordinate = neighbourCoordinates[i];              // a coordinate változóba eltároljuk a neighbourCoordinates tömb i-edik elemét
+        exploreField(coordinate.row, coordinate.col);          // meghívjuk a exploreField függvényt, amelynek átadjuk a coordinate.row és coordinate.col változó értékét. A exploreField függvény felfedi az üres mezőt. Rekurzív függvény, amely addig fut, amíg a szomszédos mezők közül nem talál olyat, amely nem üres.
+      }
+    }
+  }else {
+   flagMap[row][col] = !flagMap[row][col];                    // a flagMap tömb row-edik és col-edik tömbjének valahányadik elemébe beírjuk a !flagMap[row][col] értékét. A !flagMap[row][col] azt jelenti, hogy a flagMap tömb row-edik és col-edik tömbjének valahányadik eleme negáltja. A flagMap tömbben tároljuk el, hogy melyik mezőt jelöltük meg zászlóval.
+   remainingMines += flagMap[row][col] ? -1 : 1;              // a remainingMines változó értékéhez hozzáadjuk a flagMap tömb row-edik és col-edik tömbjének valahányadik elemét. A flagMap tömbben tároljuk el, hogy melyik mezőt jelöltük meg zászlóval. Ha a flagMap tömb row-edik és col-edik tömbjének valahányadik eleme true, akkor a remainingMines változó értékéből kivonunk 1-et, ha false, akkor pedig hozzáadunk 1-et. A remainingMines változó értéke azoknak a mezőknek száma, amelyek még nem voltak felfedve, és amelyekre még nem tettünk zászlót. Ternary operator a ? és : karakterek közötti kifejezés, amely akkor fut le, ha a ? előtti kifejezés igaz, és akkor fut le, ha a : utáni kifejezés igaz. A ternary operator egy rövidített if-else szerkezet, amelynek 3 operandusa van. 
+   mineCounter.innerText = convertNumberTo3DigitString(remainingMines);   // a mineCounter innerText-jébe beírjuk a convertNumberTo3DigitString függvény visszatérési értékét, amelynek átadjuk a remainingMines változó értékét. A convertNumberTo3DigitString függvény a számot 3 számjegyű stringgé alakítja. A remainingMines változó értéke azoknak a mezőknek száma, amelyek még nem voltak felfedve, és amelyekre még nem tettünk zászlót. Ez azért fontos, hogy működjön a zászlózás, mert a zászlózásnál a remainingMines változó értékét növelni vagy csökkenteni kell.
+  }
   drawMap();                                                 // meghívjuk a drawMap függvényt, amely a canvason jelenít meg képeket
-  mineCounter.innerText = convertNumberTo3DigitString(remainingMines);   // a mineCounter innerText-jébe beírjuk a convertNumberTo3DigitString függvény visszatérési értékét, amelynek átadjuk a remainingMines változó értékét. A convertNumberTo3DigitString függvény a számot 3 számjegyű stringgé alakítja. A remainingMines változó értéke azoknak a mezőknek száma, amelyek még nem voltak felfedve, és amelyekre még nem tettünk zászlót. Ez azért fontos, hogy működjön a zászlózás, mert a zászlózásnál a remainingMines változó értékét növelni vagy csökkenteni kell.
+  if (isGameOver) {
+    showWrongFlags();                                        // meghívjuk a showWrongFlags függvényt, amely megmutatja a rosszul jelölt mezőket
+  }
 });
 
 actionButton.addEventListener('click', function () {         // az actionButton változóhoz hozzáadunk egy click eseményfigyelőt, amelynek átadjuk az event paramétert. Így a gombra kattintva lefut a függvény.
@@ -89,6 +97,17 @@ actionButton.addEventListener('click', function () {         // az actionButton 
   stopTimer();                                               // meghívjuk a stopTimer függvényt, amely leállítja az időmérőt
   timeCounter.innerText = convertNumberTo3DigitString(0);    // a timeCounter innerText-jébe beírjuk a convertNumberTo3DigitString függvény visszatérési értékét, amelynek átadjuk a 0 értéket. A convertNumberTo3DigitString függvény a számot 3 számjegyű stringgé alakítja. Lenullázzuk az időt.
 });
+
+function checkGameEnd(row, col) {                            // checkGameEnd függvény, amely ellenőrzi, hogy a játék véget ért-e
+  if (map[row][col] === mine && exploredMap[row][col]) {     // if feltétel, amely akkor fut le, ha a map tömb row-edik és col-edik tömbjének valahányadik eleme egyenlő a mine stringgel, és a exploredMap tömb row-edik és col-edik tömbjének valahányadik eleme true. A map tömbben tároljuk el, hogy a pálya milyen állapotban van. A exploredMap tömbben tároljuk el, hogy fel volt-e fedve a mező. A map tömbben tároljuk el, hogy a pálya milyen állapotban van. A exploredMap tömbben tároljuk el, hogy fel volt-e fedve a mező. A map tömbben tároljuk el, hogy a pálya milyen állapotban van. A exploredMap tömbben tároljuk el, hogy fel volt-e fedve a mező. A map tömbben tároljuk el, hogy a pálya milyen állapotban van. A exploredMap tömbben tároljuk el, hogy fel volt-e fedve a mező. A map tömbben tároljuk el, hogy a pálya milyen állapotban van. A exploredMap tömbben tároljuk el, hogy fel volt-e fedve a mező.
+    looseGame();                                             // meghívjuk a looseGame függvényt, amely azt jelzi, hogy a játékot elvesztettük
+    stopTimer();                                             // meghívjuk a stopTimer függvényt, amely leállítja az időmérőt
+  } else if (exploredFields === rows * columns - mineCount) { // else if feltétel, amely akkor fut le, ha a exploredFields változó értéke egyenlő a rows és columns változó szorzatából kivonva a mineCount változó értékét. A rows változó értéke a canvas magassága osztva a size változóval, ami a hidden kép mérete. A columns változó értéke a canvas szélessége osztva a size változóval, ami a hidden kép mérete. A mineCount változó értéke az aknák számát jelöli. A exploredFields változó értéke azoknak a mezőknek száma, amelyeket már felfedtünk.
+    isGameOver = true;                                       // a isGameOver változó értékét true-ra állítjuk, ami azt jelenti, hogy a játék véget ért
+    actionButton.src = buttons.won;                          // az actionButton src-jébe beírjuk a buttons objektum won kulcsú elemének értékét, ami a nyerő gomb képe. A mosolygós gombot lecseréljük a nyerő gombra
+    stopTimer();                                             // meghívjuk a stopTimer függvényt, amely leállítja az időmérőt
+  }
+}
 
 function startTimer() {                                      // startTimer függvény, amely elindítja az időmérőt
   let seconds = 0;                                           // a seconds változóba eltároljuk a 0 értéket
@@ -118,6 +137,10 @@ function initGame() {                                        // initGame függv�
 function looseGame() {                                       // looseGame függvény, amely azt jelzi, hogy a játékot elvesztettük
   isGameOver = true;                                         // a isGameOver változó értékét true-ra állítjuk, ami azt jelenti, hogy a játék véget ért
   actionButton.src = buttons.lost;                           // az actionButton src-jébe beírjuk a buttons objektum lost kulcsú elemének értékét, ami a lost gomb képe. A mosolygós gombot lecseréljük a vesztett gombra
+  showWrongFlags();                                          // meghívjuk a showWrongFlags függvényt, amely megmutatja a rosszul jelölt mezőket
+}  
+
+function showWrongFlags() {                                  // showWrongFlags függvény, amely megmutatja a rosszul jelölt mezőket
   for (let rowI = 0; rowI < rows; rowI++) {                  // for ciklus, amely a rows változó értékéig megy, ami nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete
     for (let colI = 0; colI < columns; colI++) {             // for ciklus, amely a columns változó értékéig megy, ami nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete
       if (flagMap[rowI][colI] && map[rowI][colI] !== mine) {       // if feltétel, amely akkor fut le, ha a flagMap tömb rowI-edik és colI-edik tömbjének valahányadik eleme true és a map tömb rowI-edik és colI-edik tömbjének valahányadik eleme nem egyenlő a mine változó értékével. A flagMap tömbben tároljuk el, hogy melyik mezőt jelöltük meg zászlóval. A map tömbben tároljuk el, hogy a pálya milyen állapotban van. Ha a feltétel teljesül, akkor a játékos rosszul jelölt meg egy mezőt zászlóval.
@@ -125,12 +148,13 @@ function looseGame() {                                       // looseGame függv
       }
     }
   }
-}  
+}
 
 function exploreField(row, col) {                            // exploreField függvény, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
   if (!exploredMap[row][col] && !flagMap[row][col]) {        // if feltétel, amely akkor fut le, ha a exploredMap tömb row-edik és col-edik tömbjének valahányadik eleme false és a flagMap tömb row-edik és col-edik tömbjének valahányadik eleme false. A false azt jelenti, hogy a mezőt még nem fedtük fel. A flagMap tömbben tároljuk el, hogy melyik mezőt jelöltük meg zászlóval. Ha a feltétel teljesül, akkor a mezőt még nem fedtük fel, és nem is jelöltük meg zászlóval.
     exploredFields++;                                        // a exploredFields változó értékét növeljük eggyel
     exploredMap[row][col] = true;                            // a exploredMap tömb row-edik és col-edik tömbjének valahányadik elemébe beírjuk a true értéket. A true azt jelenti, hogy a mezőt már felfedtük. 
+    checkGameEnd(row, col);                                  // meghívjuk a checkGameEnd függvényt, amelynek átadjuk a row és col változó értékét. A checkGameEnd függvény ellenőrzi, hogy a játék véget ért-e.
     if (map[row][col] === 0) {                               // if feltétel, amely akkor fut le, ha a map tömb row-edik és col-edik tömbjének valahányadik eleme 0. A 0 azt jelenti, hogy a mező mellett nincs akna.
       let neighbourCoordinates = findNeighbourFields(map, row, col);        // a neighbourCoordinates változóba eltároljuk a findNeighbourFields függvény visszatérési értékét, amelynek átadjuk a map, row (rowIndex röviden) és col (columnIndex röviden) változó értékét. A findNeighbourFields függvény megtalálja egy mező összes szomszédját. 
       for (let i = 0; i < neighbourCoordinates.length; i++) {               // for ciklus, amely a neighbourCoordinates tömb értékéig megy, ami nem más mint a neighbourCoordinates tömb, amelyet a findNeighbourFields függvény ad vissza. A neighbourCoordinates tömbben tároljuk el a szomszédos mezők sor- és oszlopindexeit. 
@@ -166,6 +190,17 @@ function countMines(map, coordinates) {                  // countMines függvén
     }
   }
   return mineCount;                                      // visszatérünk a mineCount változó értékével
+}
+
+function countFlaggedNeighbours(coordinates) {           // countFlaggedNeighbours függvény, amelynek átadjuk a coordinates változó értékét. A countFlaggedNeighbours függvény kiszámolja, hogy a szomszédos mezők közül hányat jelöltünk meg zászlóval.
+  let flaggedNeighbours = 0;                             // a flaggedNeighbours változóba eltároljuk a 0 értéket, ami azért kell, hogy tudjuk, hogy hány akna van a pályán
+  for (let i = 0; i < coordinates.length; i++) {         // for ciklus, amely a coordinates tömb értékéig megy, ami nem más mint a neighbourCoordinates tömb, amelyet a findNeighbourFields függvény ad vissza
+    let coordinate = coordinates[i];                     // a coordinate változóba eltároljuk a coordinates tömb i-edik, valahányadik elemét
+    if (flagMap[coordinate.row][coordinate.col]) {       // if feltétel, amely akkor fut le, ha a flagMap tömb coordinate.row-edik és coordinate.col-edik tömbjének valahányadik eleme true. A flagMap tömbben tároljuk el, hogy melyik mezőt jelöltük meg zászlóval.
+      flaggedNeighbours++;                               // a flaggedNeighbours változó értékét növeljük eggyel
+    }
+  }
+  return flaggedNeighbours;                              // visszatérünk a flaggedNeighbours változó értékével
 }
 
 function findNeighbourFields(map, rowI, colI) {                    // findNeighbourFields függvény, amelynek átadjuk a map, rowIndex és columnIndex változó értékét. A findNeighbourFields függvény megtalálja egy mező összes szomszédját.
