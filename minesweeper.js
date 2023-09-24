@@ -2,12 +2,13 @@ const canvas = document.getElementById('myCanvas');                             
 const c = canvas.getContext('2d');                                                   // a canvas változó contextjét eltároljuk a c változóban. A context a rajzolás alapvető eszköze, amely lehetővé teszi a rajzolást a canvason. A getContext metódus a canvas objektum egy metódusa, amely visszaadja a canvas contextjét, amelyet a c változóban tárolunk el. A getContext metódusnak egy paramétere van, amely a context típusát határozza meg. A 2d a 2 dimenziós rajzolást jelenti, ami a leggyakrabban használt. 
 const actionButton = document.getElementById('action-button');                       // az action id-jű gombot eltároljuk az actionButton változóban. A document objektum egy metódusa a getElementById, amely visszaadja a megadott id-jű elemet, amelyet az actionButton változóban tárolunk el. A getElementById metódusnak egy paramétere van, amely a keresett elem id-je. A gomb egy HTML elem, amelyet a HTML dokumentumban a <button> taggel hozunk létre. A gomb egy olyan elem, amelyre kattintva lefut egy függvény.
 const mineCounter = document.getElementById('mine-count');                           // a mine-counter id-jű span elemet eltároljuk a mineCounter változóban. A document objektum egy metódusa a getElementById, amely visszaadja a megadott id-jű elemet, amelyet a mineCounter változóban tárolunk el. A getElementById metódusnak egy paramétere van, amely a keresett elem id-je. A span egy HTML elem, amelyet a HTML dokumentumban a <span> taggel hozunk létre. A span egy olyan elem, amely a szöveg egy részét jelöli. A span elemet a mineCounter változóban tároljuk el.
+const timeCounter = document.getElementById('time');                         // a time-counter id-jű span elemet eltároljuk a timeCounter változóban. A document objektum egy metódusa a getElementById, amely visszaadja a megadott id-jű elemet, amelyet a timeCounter változóban tárolunk el. A getElementById metódusnak egy paramétere van, amely a keresett elem id-je. A span egy HTML elem, amelyet a HTML dokumentumban a <span> taggel hozunk létre. A span egy olyan elem, amely a szöveg egy részét jelöli. A span elemet a timeCounter változóban tároljuk el.
 
 const size = 50;                                        // a size változóba eltároljuk a 50 értéket. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
 const columns = canvas.width / size;                    // a columns változóba eltároljuk a canvas szélességét osztva a size változóval. A canvas a képernyőn megjelenő terület, amelyen rajzolunk. A size változó a hidden kép mérete, ami 50 pixel széles és magas.
 const rows = canvas.height / size;                      // a rows változóba eltároljuk a canvas magasságát osztva a size változóval 
 const mine = 'mine';                                    // a mine változóba eltároljuk a mine stringet 
-const mineCount = 20;                                   // a mineCount változóba eltároljuk az 20 értéket, azaz 20 db akna lesz a pályán
+const mineCount = 30;                                   // a mineCount változóba eltároljuk az 30 értéket, azaz 30 db akna lesz a pályán
 const images = {
   'hidden': document.getElementById('hidden'),               // a hidden id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk
   'mine': document.getElementById('exploded-mine'),          // az exploded-mine id-jű képet keresi meg a dokumentumban és eltárolja az image változóban, amelyet a canvas contextjének drawImage metódusában használunk, ez a felrobbant akna képe
@@ -39,6 +40,7 @@ let flaggedMap;                                       // a flaggedFields változ
 let map;                                              // a map változó azt tárolja, hogy a pálya milyen állapotban van 
 let exploredMap;                                      // a exploredMap változó azt tárolja, hogy fel volt-e fedve a mező
 let remainingMines;                                   // a remainingMines változó azt tárolja, hogy hány akna van még a pályán
+let timer;                                            // a timer változó azt tárolja, hogy hány másodperce játszunk
 
 initGame();                                           // meghívjuk a initGame függvényt, amely inicializálja a játékot
 
@@ -55,14 +57,17 @@ canvas.addEventListener('click', function (event) {         // a canvas változ�
     placeMines(map, mineCount, row, col);                   // meghívjuk a placeMines függvényt, amelynek átadjuk a map, mineCount, row és col változó értékét. A placeMines függvény elhelyezi a pályán az aknákat.
     calculateFieldValues(map);                              // meghívjuk a calculateFieldValues függvényt, amelynek átadjuk a map változó értékét. A calculateFieldValues függvény kiszámolja, hogy egy mező mellett hány akna van.
     isFirstClick = false;                                   // a isFirstClick változó értékét false-ra állítjuk, ami azt jelenti, hogy már kattintottunk a pályára
+    startTimer();                                           // meghívjuk a startTimer függvényt, amely elindítja az időmérőt
   }
   exploreField(row, col);                                   // meghívjuk a exploreField függvényt, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
   drawMap();                                                // meghívjuk a drawMap függvényt, amely a canvason jelenít meg képeket
   if (map[row][col] === mine) {                             // if feltétel, amely akkor fut le, ha a map tömb row-edik és col-edik tömbjének valahányadik eleme egyenlő a mine változó értékével
-    looseGame();                                            // meghívjuk a looseGame függvényt, amely azt jrlzi, hogy a játékot elvesztettük 
+    looseGame();                                            // meghívjuk a looseGame függvényt, amely azt jrlzi, hogy a játékot elvesztettük
+    stopTimer();                                            // meghívjuk a stopTimer függvényt, amely leállítja az időmérőt 
   } else if (exploredFields === (rows * columns) - mineCount) {   // else if feltétel, amely akkor fut le, ha a exploredFields változó értéke egyenlő a rows és columns változók szorzatából kivonva a mineCount változó értékét. A rows változó értéke nem más mint a canvas magassága osztva a size változóval, ami a hidden kép mérete, a columns változó értéke nem más mint a canvas szélessége osztva a size változóval, ami a hidden kép mérete. A exploredFields változó értéke pedig az a mezők száma, amelyeket már felfedtünk. Ha a feltétel teljesül, akkor a játékos nyert.
     isGameOver = true;                                      // a isGameOver változó értékét true-ra állítjuk, ami azt jelenti, hogy a játék véget ért
     actionButton.src = buttons.won;                         // az actionButton src-jébe beírjuk a buttons objektum won kulcsú elemének értékét, ami a won gomb képe. A mosolygós gombot lecseréljük a nyerő gombra
+    stopTimer();                                            // meghívjuk a stopTimer függvényt, amely leállítja az időmérőt
   }
 });
 
@@ -81,7 +86,21 @@ canvas.addEventListener('contextmenu', function (event) {    // a canvas változ
 
 actionButton.addEventListener('click', function () {         // az actionButton változóhoz hozzáadunk egy click eseményfigyelőt, amelynek átadjuk az event paramétert. Így a gombra kattintva lefut a függvény.
   initGame();                                                // meghívjuk a initGame függvényt, amely inicializálja a játékot
+  stopTimer();                                               // meghívjuk a stopTimer függvényt, amely leállítja az időmérőt
+  timeCounter.innerText = convertNumberTo3DigitString(0);    // a timeCounter innerText-jébe beírjuk a convertNumberTo3DigitString függvény visszatérési értékét, amelynek átadjuk a 0 értéket. A convertNumberTo3DigitString függvény a számot 3 számjegyű stringgé alakítja. Lenullázzuk az időt.
 });
+
+function startTimer() {                                      // startTimer függvény, amely elindítja az időmérőt
+  let seconds = 0;                                           // a seconds változóba eltároljuk a 0 értéket
+  timer = setInterval(function () {                          // a timer változóba eltároljuk a setInterval függvény visszatérési értékét, amelynek átadjuk a setInterval függvény második paraméterében lévő függvényt. A setInterval függvény meghívja a paraméterként kapott függvényt a megadott időközönként. A setInterval függvénynek két paramétere van, az első paraméter a meghívandó függvény, a második paraméter a meghívás időköze. A setInterval függvény visszatérési értéke egy időzítő azonosító, amelyet a clearInterval függvénynek átadva leállíthatjuk az időzítőt.
+    seconds = Math.min(seconds + 1, 999);                    // a seconds változó értékéhez hozzáadjuk az 1-et, és a Math.min függvénnyel összehasonlítjuk a 999 értékkel. A Math.min függvény visszatérési értéke a paraméterként kapott számok közül a legkisebb. A seconds változó értéke az eltelt másodpercek száma.
+    timeCounter.innerText = convertNumberTo3DigitString(seconds);   // a timeCounter innerText-jébe beírjuk a convertNumberTo3DigitString függvény visszatérési értékét, amelynek átadjuk a seconds változó értékét. A convertNumberTo3DigitString függvény a számot 3 számjegyű stringgé alakítja. A seconds változó értéke az eltelt másodpercek száma.
+  }, 1000);                                                  // a setInterval függvény második paraméterébe beírjuk az 1000 értéket, ami 1000 miliszekundum, azaz 1 másodperc. A setInterval függvény meghívja a paraméterként kapott függvényt a megadott időközönként. A setInterval függvénynek két paramétere van, az első paraméter a meghívandó függvény, a második paraméter a meghívás időköze. A set
+}
+
+function stopTimer() {                                      // stopTimer függvény, amely leállítja az időmérőt
+  clearInterval(timer);                                     // a clearInterval függvénynek átadjuk a timer változó értékét. A timer változó értéke egy időzítő azonosító, amelyet a clearInterval függvénynek átadva leállíthatjuk az időzítőt.
+}
 
 function initGame() {                                        // initGame függvény, amely inicializálja a játékot
   isGameOver = false;                                        // a isGameOver változó értékét false-ra állítjuk, ami azt jelenti, hogy a játék még nem ért véget
@@ -106,7 +125,6 @@ function looseGame() {                                       // looseGame függv
       }
     }
   }
-
 }  
 
 function exploreField(row, col) {                            // exploreField függvény, amelynek átadjuk a row és col változó értékét. A exploreField függvény felfedi az üres mezőt.
